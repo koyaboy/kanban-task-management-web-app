@@ -1,0 +1,11 @@
+<div class="flex gap-4 overflow-scroll">
+    <article *ngFor="let column of columns">
+        <h2>{{column.name}}</h2>
+
+        <div *ngFor="let task of column.tasks">
+            <div class="bg-white">
+                {{task.title}}
+            </div>
+        </div>
+    </article>
+</div>
