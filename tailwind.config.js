@@ -4,20 +4,6 @@ module.exports = {
     "./src/**/*.{html,ts}",
   ],
   theme: {
-    colors: {
-      "purple": "#635FC7",
-      "purple-hover": "#A8A4FF",
-      "black": "#000112",
-      "very-dark-grey": "#20212C",
-      "dark-grey-one": "#2B2C37",
-      "dark-grey-two": "#3E3F4E",
-      "medium-grey": "#828FA3",
-      "light-grey": "#E4EBFA",
-      "very-light-grey": "#F4F7FD",
-      "white": "#FFFFFF",
-      "red": "#EA5555",
-      "red-hover": "#FF9898"
-    },
     fontSize: {
       'heading-XL': ['1.5rem', {
         lineHeight: '1.875rem',
@@ -44,6 +30,23 @@ module.exports = {
         fontWeight: '700',
       }],
     },
+
+    extend: {
+      colors: {
+        "purple": "#635FC7",
+        "purple-hover": "#A8A4FF",
+        "black": "#000112",
+        "very-dark-grey": "#20212C",
+        "dark-grey-one": "#2B2C37",
+        "dark-grey-two": "#3E3F4E",
+        "medium-grey": "#828FA3",
+        "light-grey": "#E4EBFA",
+        "very-light-grey": "#F4F7FD",
+        "white": "#FFFFFF",
+        "red": "#EA5555",
+        "red-hover": "#FF9898"
+      },
+    }
   },
   plugins: [],
 }

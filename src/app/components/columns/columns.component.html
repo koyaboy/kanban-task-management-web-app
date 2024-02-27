@@ -1,10 +1,17 @@
-<div class="flex gap-4 overflow-scroll">
-    <article *ngFor="let column of columns">
-        <h2>{{column.name}}</h2>
+<div class="flex gap-5 overflow-scroll mt-6 px-4 pb-5">
+    <article *ngFor="let column of columns; let i = index">
+        <div class="flex gap-2 mb-4 w-[17.5rem]">
+            <div class="w-4 h-4 rounded-full" [ngStyle]="{ 'background-color': getRandomColor(i) }"></div>
+            <h2 class="text-heading-S text-medium-grey"><span
+                    class="tracking-widest">{{column.name.toUpperCase()}}</span>
+                ({{column.tasks.length}})</h2>
+        </div>
 
-        <div *ngFor="let task of column.tasks">
-            <div class="bg-white">
-                {{task.title}}
+        <div class="flex flex-col gap-4">
+            <div *ngFor="let task of column.tasks"
+                class="bg-white flex flex-col gap-2 rounded-lg px-4 py-5 w-[17.5rem] shadow-[0_4px_6px_rgba(54,78,126,0.115)]">
+                <h3 class="text-heading-M text-black">{{task.title}}</h3>
+                <p class="text-body-M text-medium-grey">0 of {{task.subtasks.length}} subtasks</p>
             </div>
         </div>
     </article>
