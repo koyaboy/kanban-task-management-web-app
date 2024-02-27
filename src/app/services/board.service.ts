@@ -20,6 +20,6 @@ export class BoardService {
     shareReplay(1)
   )
   boards = toSignal(this.boards$, { initialValue: [] })
-  selectedBoard: string = this.boards()[0]?.name
+  selectedBoard: string = this.boards()[2]?.name
 
 }

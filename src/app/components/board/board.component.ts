@@ -4,7 +4,6 @@ import { BoardService } from '../../services/board.service';
 import { Board } from '../../model/board';
 import { NgIf } from '@angular/common';
 
-
 @Component({
   selector: 'app-board',
   standalone: true,
@@ -18,8 +17,4 @@ export class BoardComponent {
   boards: Signal<Board[]> = this.boardService.boards
 
   board: Signal<Board | undefined> = computed(() => this.boards().find(board => board.name == this.boardService.selectedBoard))
-
-  ngOnInit() {
-    console.log(this.board())
-  }
 }
