@@ -2,12 +2,13 @@ import { Component, computed, inject, Signal } from '@angular/core';
 import { ColumnsComponent } from '../columns/columns.component';
 import { BoardService } from '../../services/board.service';
 import { Board } from '../../model/board';
+import { NgIf } from '@angular/common';
 
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [ColumnsComponent],
+  imports: [ColumnsComponent, NgIf],
   templateUrl: './board.component.html',
   styleUrl: './board.component.css'
 })
@@ -17,4 +18,8 @@ export class BoardComponent {
   boards: Signal<Board[]> = this.boardService.boards
 
   board: Signal<Board | undefined> = computed(() => this.boards().find(board => board.name == this.boardService.selectedBoard))
+
+  ngOnInit() {
+    console.log(this.board())
+  }
 }
