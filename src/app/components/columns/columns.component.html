@@ -12,7 +12,8 @@
                 class="bg-white flex flex-col gap-2 rounded-lg cursor-pointer px-4 py-5 w-[17.5rem] shadow-[0_4px_6px_rgba(54,78,126,0.115)]"
                 (click)="viewTask(task.title, task.description, task.subtasks,task.status)">
                 <h3 class="text-heading-M text-black">{{task.title}}</h3>
-                <p class="text-body-M text-medium-grey">0 of {{task.subtasks.length}} subtasks</p>
+                <p class="text-body-M text-medium-grey">{{getCompletedSubtasks(task)}} of {{task.subtasks.length}}
+                    subtasks</p>
             </div>
         </div>
     </article>

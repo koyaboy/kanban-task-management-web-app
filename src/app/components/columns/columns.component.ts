@@ -6,6 +6,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { Subtask } from '../../model/subtask';
 import { BoardService } from '../../services/board.service';
 import { ViewContainerRef } from '@angular/core';
+import { Task } from '../../model/task';
 
 @Component({
   selector: 'app-columns',
@@ -24,12 +25,17 @@ export class ColumnsComponent {
   taskDescription!: string
   taskSubtasks!: Array<Subtask>
   taskStatus!: string
+  completedSubtasks!: number
 
   @ViewChild("viewTaskRef") viewTaskRef!: TemplateRef<any>
 
   getRandomColor(index: number) {
     let colors = ["#49C4E5", "#8471F2", "#67E2AE"];
     return colors[index % colors.length]
+  }
+
+  getCompletedSubtasks(task: Task) {
+    return task.subtasks.filter((subtask) => subtask.isCompleted).length
   }
 
   viewTask(title: string, description: string, subtasks: Array<Subtask>, status: string): void {
