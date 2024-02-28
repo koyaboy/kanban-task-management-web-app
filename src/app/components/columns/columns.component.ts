@@ -1,29 +1,31 @@
 import { NgFor, NgStyle } from '@angular/common';
-import { Component, Input, ViewChild, inject, viewChild } from '@angular/core';
+import { Component, Input, TemplateRef, ViewChild, inject, viewChild } from '@angular/core';
 import { Column } from '../../model/column';
 import { ViewTaskComponent } from '../view-task/view-task.component';
-import { Overlay, OverlayConfig } from "@angular/cdk/overlay"
-import { CdkPortal, PortalModule } from '@angular/cdk/portal';
+import { TemplatePortal } from '@angular/cdk/portal';
 import { Subtask } from '../../model/subtask';
+import { BoardService } from '../../services/board.service';
+import { ViewContainerRef } from '@angular/core';
 
 @Component({
   selector: 'app-columns',
   standalone: true,
-  imports: [NgFor, NgStyle, ViewTaskComponent, PortalModule],
+  imports: [NgFor, NgStyle, ViewTaskComponent],
   templateUrl: './columns.component.html',
   styleUrl: './columns.component.css'
 })
 export class ColumnsComponent {
+  boardService: BoardService = inject(BoardService)
+  viewContainerRef: ViewContainerRef = inject(ViewContainerRef)
+
   @Input() columns: Column[] | undefined = []
-
-  overlay: Overlay = inject(Overlay)
-
-  @ViewChild(CdkPortal) portal!: CdkPortal
 
   taskTitle!: string
   taskDescription!: string
   taskSubtasks!: Array<Subtask>
   taskStatus!: string
+
+  @ViewChild("viewTaskRef") viewTaskRef!: TemplateRef<any>
 
   getRandomColor(index: number) {
     let colors = ["#49C4E5", "#8471F2", "#67E2AE"];
@@ -36,13 +38,7 @@ export class ColumnsComponent {
     this.taskSubtasks = subtasks
     this.taskStatus = status
 
-    const config = new OverlayConfig({
-      positionStrategy: this.overlay.position().global().centerVertically().centerHorizontally(),
-      hasBackdrop: true
-    })
-
-    const overlayRef = this.overlay.create(config)
-    overlayRef.attach(this.portal)
-    overlayRef.backdropClick().subscribe(() => overlayRef.detach())
+    const viewTaskPortal = new TemplatePortal(this.viewTaskRef, this.viewContainerRef)
+    this.boardService.openModal(viewTaskPortal)
   }
 }
