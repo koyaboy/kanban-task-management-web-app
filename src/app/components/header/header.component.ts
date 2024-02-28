@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, inject, Signal, computed, ViewChild
 import { BoardService } from '../../services/board.service';
 import { Board } from '../../model/board';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { AddBoardComponent } from '../add/add-board/add-board.component';
+import { AddTaskComponent } from '../add/add-task/add-task.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [AddBoardComponent],
+  imports: [AddTaskComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -19,11 +19,11 @@ export class HeaderComponent {
   boards: Signal<Board[]> = this.boardService.boards
   board: Signal<Board | undefined> = computed(() => this.boards().find(board => board.name == this.boardService.selectedBoard))
 
-  @ViewChild("addBoardRef") addBoardRef!: TemplateRef<any>
+  @ViewChild("addTaskRef") addTaskRef!: TemplateRef<any>
 
   openAddBoardModal() {
-    const addBoardPortal = new TemplatePortal(this.addBoardRef, this.viewContainerRef)
-    this.boardService.openModal(addBoardPortal)
+    const addTaskPortal = new TemplatePortal(this.addTaskRef, this.viewContainerRef)
+    this.boardService.openModal(addTaskPortal)
 
   }
 }
