@@ -38,7 +38,6 @@ export class ColumnsComponent {
 
     const config = new OverlayConfig({
       positionStrategy: this.overlay.position().global().centerVertically().centerHorizontally(),
-      width: '80%',
       hasBackdrop: true
     })
 

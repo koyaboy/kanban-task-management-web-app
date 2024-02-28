@@ -1,3 +1,36 @@
-<div class="bg-white">
-    <h1>{{title}}</h1>
+<div class="bg-white p-5 flex flex-col gap-4 rounded-md w-[90vw]">
+    <div class="flex items-center justify-between">
+        <h1 class="text-heading-L text-black w-[85%]">{{title}}</h1>
+        <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg">
+            <g fill="#828FA3" fill-rule="evenodd">
+                <circle cx="2.308" cy="2.308" r="2.308" />
+                <circle cx="2.308" cy="10" r="2.308" />
+                <circle cx="2.308" cy="17.692" r="2.308" />
+            </g>
+        </svg>
+    </div>
+
+    <p class="text-body-L text-medium-grey">{{description}}</p>
+
+    <div>
+        <h2 class="mb-3 font-bold text-[0.75rem] text-medium-grey">Subtasks ({{completedSubtasks}} of
+            {{subtasks.length}})</h2>
+
+        <div *ngFor="let subtask of subtasks"
+            class="bg-very-light-grey flex gap-4 items-center mt-2 px-2 py-3 rounded-[0.25rem]">
+            <input type="checkbox" [checked]="subtask.isCompleted" />
+            <p [ngStyle]="{'opacity':  subtask.isCompleted ? '0.5':'1', 'text-decoration': subtask.isCompleted ? 'line-through':''}"
+                class="text-black font-bold text-[0.75rem]">
+                {{subtask.title}}
+            </p>
+        </div>
+    </div>
+
+    <div>
+        <h3 class="font-bold text-[0.75rem] text-medium-grey">Current Status</h3>
+        <select class="w-full rounded-[0.25rem] border border-[#828FA3] mt-1 p-2 text-black text-body-L">
+            <option [defaultSelected]="status">{{status}}</option>
+            <option>Test</option>
+        </select>
+    </div>
 </div>
