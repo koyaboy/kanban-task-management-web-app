@@ -1,4 +1,4 @@
-<div class="bg-white p-6 flex flex-col gap-5 rounded-md w-[90vw] relative">
+<div class="bg-white p-6 flex flex-col gap-5 rounded-md w-[90vw]" role="dialog">
     <div class="flex items-center justify-between">
         <h1 class="text-heading-L text-black w-[85%]">{{title}}</h1>
         <button #triggerOptions="cdkOverlayOrigin" cdkOverlayOrigin
@@ -51,12 +51,16 @@
         <div
             class="bg-white flex flex-col rounded-lg px-3 py-4 gap-4 z-[999] w-[6.25rem] shadow-[0_10px_20px_0_rgba(54,78,126,0.25)]">
             <button class="text-body-L text-medium-grey text-left" (click)="openEditTaskModal()">Edit Task</button>
-            <button class="text-body-L text-red text-left">Delete Task</button>
+            <button class="text-body-L text-red text-left" (click)="openDeleteTaskModal()">Delete Task</button>
         </div>
     </ng-template>
 
     <ng-template #editTaskRef>
         <app-edit-task [title]="title" [description]="description" [subtasks]="subtasks"
             [status]="status"></app-edit-task>
+    </ng-template>
+
+    <ng-template #deleteTaskRef>
+        <app-delete-task [title]="title"></app-delete-task>
     </ng-template>
 </div>
