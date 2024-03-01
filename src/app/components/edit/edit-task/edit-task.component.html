@@ -6,34 +6,25 @@
             <label for="title" class="font-bold text-[0.75rem] text-medium-grey">Title</label>
             <input type="text" id="title"
                 class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 text-body-L text-black"
-                placeholder="e.g Take a cofee break" />
+                placeholder="e.g Take a cofee break" [value]="title" />
         </div>
 
         <div class="flex flex-col gap-2">
             <label for="description" class="font-bold text-[0.75rem] text-medium-grey">Description</label>
             <textarea id="description"
                 placeholder="e.g. It's always good to take a break. This 15 minute break will  recharge the batteries a little."
-                class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 text-body-L text-black h-[7rem] resize-none"></textarea>
+                class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 text-body-L text-black h-[7rem] resize-none"
+                [value]="description"></textarea>
         </div>
 
         <fieldset class="flex flex-col gap-3">
             <legend class="font-bold text-[0.75rem] text-medium-grey mb-2">Subtasks</legend>
 
-            <div class="flex justify-between items-center gap-[0.6rem]">
+            <div class="flex justify-between items-center gap-[0.6rem]" *ngFor="let subtask of subtasks">
                 <input type="text" placeholder="e.g. Make Coffee"
-                    class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black" />
+                    class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black"
+                    [value]="subtask.title" />
                 <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg ">
-                    <g fill="#828FA3" fill-rule="evenodd">
-                        <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
-                        <path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" />
-                    </g>
-                </svg>
-            </div>
-
-            <div class="flex justify-between items-center gap-[0.6rem]">
-                <input type="text" placeholder="e.g. Drink coffee and smile"
-                    class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black" />
-                <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg">
                     <g fill="#828FA3" fill-rule="evenodd">
                         <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
                         <path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" />
@@ -50,7 +41,7 @@
             <label for="status" class="font-bold text-[0.75rem] text-medium-grey">Status</label>
             <select id="status"
                 class="w-full rounded-[0.25rem] border border-[#828FA3] mt-1 p-2 text-black text-body-L">
-                <option>Todo</option>
+                <option>{{status}}</option>
             </select>
         </div>
 

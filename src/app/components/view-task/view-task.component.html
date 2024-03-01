@@ -56,6 +56,7 @@
     </ng-template>
 
     <ng-template #editTaskRef>
-        <app-edit-task></app-edit-task>
+        <app-edit-task [title]="title" [description]="description" [subtasks]="subtasks"
+            [status]="status"></app-edit-task>
     </ng-template>
 </div>
