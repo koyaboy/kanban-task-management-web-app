@@ -1,4 +1,4 @@
-<div class="bg-white p-5 flex flex-col gap-4 rounded-md w-[90vw]">
+<div class="bg-white p-6 flex flex-col gap-5 rounded-md w-[90vw]">
     <div class="flex items-center justify-between">
         <h1 class="text-heading-L text-black w-[85%]">{{title}}</h1>
         <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg">
@@ -17,7 +17,7 @@
             {{subtasks.length}})</h2>
 
         <div *ngFor="let subtask of subtasks"
-            class="bg-very-light-grey flex gap-4 items-center mt-2 px-2 py-3 rounded-[0.25rem]">
+            class="bg-very-light-grey flex gap-5 items-center mt-2 px-2 py-3 rounded-[0.25rem]">
             <input type="checkbox" [checked]="subtask.isCompleted" />
             <p [ngStyle]="{'opacity':  subtask.isCompleted ? '0.5':'1', 'text-decoration': subtask.isCompleted ? 'line-through':''}"
                 class="text-black font-bold text-[0.75rem]">
