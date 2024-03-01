@@ -50,8 +50,12 @@
         ]">
         <div
             class="bg-white flex flex-col rounded-lg px-3 py-4 gap-4 z-[999] w-[6.25rem] shadow-[0_10px_20px_0_rgba(54,78,126,0.25)]">
-            <button class="text-body-L text-medium-grey text-left">Edit Task</button>
+            <button class="text-body-L text-medium-grey text-left" (click)="openEditTaskModal()">Edit Task</button>
             <button class="text-body-L text-red text-left">Delete Task</button>
         </div>
+    </ng-template>
+
+    <ng-template #editTaskRef>
+        <app-edit-task></app-edit-task>
     </ng-template>
 </div>

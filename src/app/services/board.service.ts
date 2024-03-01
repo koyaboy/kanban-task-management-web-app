@@ -17,21 +17,23 @@ export class BoardService {
   http: HttpClient = inject(HttpClient)
   overlay: Overlay = inject(Overlay)
 
-  boards$ = this.http.get<Board[]>(`${this.apiUrl}/getBoards`).pipe(
-    shareReplay(1)
-  )
+  boards$ = this.http.get<Board[]>(`${this.apiUrl}/getBoards`).pipe(shareReplay(1))
   boards = toSignal(this.boards$, { initialValue: [] })
   selectedBoard: string = this.boards()[2]?.name
 
+  config = new OverlayConfig({
+    positionStrategy: this.overlay.position().global().centerVertically().centerHorizontally(),
+    hasBackdrop: true
+  })
 
-  openModal(portal: TemplatePortal<any>) {
-    const config = new OverlayConfig({
-      positionStrategy: this.overlay.position().global().centerVertically().centerHorizontally(),
-      hasBackdrop: true
-    })
+  overlayRef = this.overlay.create(this.config)
 
-    const overlayRef = this.overlay.create(config)
-    overlayRef.attach(portal)
-    overlayRef.backdropClick().subscribe(() => overlayRef.detach())
+  openModal(portal: TemplatePortal<any>): void {
+    this.overlayRef.attach(portal)
+    this.overlayRef.backdropClick().subscribe(() => this.closeModal())
+  }
+
+  closeModal(): void {
+    this.overlayRef.detach()
   }
 }

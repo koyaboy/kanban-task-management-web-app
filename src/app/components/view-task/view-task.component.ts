@@ -1,18 +1,22 @@
-import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild, inject } from '@angular/core';
 import { Subtask } from '../../model/subtask';
 import { NgFor, NgStyle } from '@angular/common';
 import { ViewContainerRef } from '@angular/core';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { EditTaskComponent } from '../edit/edit-task/edit-task.component';
+import { TemplatePortal } from '@angular/cdk/portal';
+import { BoardService } from '../../services/board.service';
 
 @Component({
   selector: 'app-view-task',
   standalone: true,
-  imports: [NgFor, NgStyle, OverlayModule],
+  imports: [NgFor, NgStyle, OverlayModule, EditTaskComponent],
   templateUrl: './view-task.component.html',
   styleUrl: './view-task.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewTaskComponent {
+  boardService: BoardService = inject(BoardService)
   viewContainerRef: ViewContainerRef = inject(ViewContainerRef)
 
   @Input() title!: string
@@ -23,7 +27,16 @@ export class ViewTaskComponent {
   completedSubtasks!: number
   openEditandDeleteOptions = false
 
+  @ViewChild("editTaskRef") editTaskRef !: TemplateRef<any>
+
   ngOnInit() {
     this.completedSubtasks = this.subtasks.filter((task) => task.isCompleted).length
+  }
+
+  openEditTaskModal() {
+    this.boardService.closeModal()
+
+    const editTaskPortal = new TemplatePortal(this.editTaskRef, this.viewContainerRef)
+    this.boardService.openModal(editTaskPortal)
   }
 }
