@@ -3,11 +3,13 @@ import { BoardService } from '../../services/board.service';
 import { Board } from '../../model/board';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { AddTaskComponent } from '../add/add-task/add-task.component';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { NgFor, NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [AddTaskComponent],
+  imports: [AddTaskComponent, OverlayModule, NgFor, NgStyle],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -18,6 +20,8 @@ export class HeaderComponent {
 
   boards: Signal<Board[]> = this.boardService.boards
   board: Signal<Board | undefined> = computed(() => this.boards().find(board => board.name == this.boardService.selectedBoard))
+
+  shouldOpenBoards: boolean = false
 
   @ViewChild("addTaskRef") addTaskRef!: TemplateRef<any>
 
