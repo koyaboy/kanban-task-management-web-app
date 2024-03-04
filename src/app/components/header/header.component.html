@@ -112,7 +112,8 @@
                     class="bg-white flex flex-col rounded-lg px-3 py-4 gap-4 z-[999] w-[12rem] shadow-[0_10px_20px_0_rgba(54,78,126,0.25)]">
                     <button class="text-body-L text-medium-grey text-left" (click)="openEditBoardModal()">Edit
                         Board</button>
-                    <button class="text-body-L text-red text-left">Delete Board</button>
+                    <button class="text-body-L text-red text-left" (click)="openDeleteBoardModal()">Delete
+                        Board</button>
                 </div>
             </ng-template>
         </button>
@@ -129,4 +130,8 @@
 
 <ng-template #editBoardRef>
     <app-edit-board [board]="this.boardService.selectedBoard"></app-edit-board>
+</ng-template>
+
+<ng-template #deleteBoardRef>
+    <app-delete-board [board]="this.boardService.selectedBoard"></app-delete-board>
 </ng-template>
