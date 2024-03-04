@@ -17,7 +17,14 @@
 
             <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="openBoards"
                 [cdkConnectedOverlayOpen]="shouldOpenBoards" (overlayOutsideClick)="shouldOpenBoards = false"
-                cdkConnectedOverlayHasBackdrop="true">
+                cdkConnectedOverlayHasBackdrop="true" [cdkConnectedOverlayPositions]="[
+                {
+                originX:'start',
+                originY:'bottom',
+                overlayX:'start',
+                overlayY:'top', 
+                offsetY: 32
+            }]">
                 <div class="bg-white py-3 rounded-lg flex flex-col gap-4 w-[16.5rem]">
                     <h1 class="font-bold text-[0.75rem] tracking-[0.15rem] text-medium-grey px-5">ALL BOARDS
                         ({{boards().length}})</h1>
@@ -80,7 +87,9 @@
             </svg>
         </button>
 
-        <div>
+        <button cdkOverlayOrigin #openEditandDeleteBoardsDropdown="cdkOverlayOrigin"
+            aria-label="Toggle Edit and Delete Board Dropdown"
+            (click)="shouldOpenEditandDeleteBoardsDropdown = !shouldOpenEditandDeleteBoardsDropdown">
             <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg">
                 <g fill="#828FA3" fill-rule="evenodd">
                     <circle cx="2.308" cy="2.308" r="2.308" />
@@ -88,7 +97,24 @@
                     <circle cx="2.308" cy="17.692" r="2.308" />
                 </g>
             </svg>
-        </div>
+
+            <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="openEditandDeleteBoardsDropdown"
+                [cdkConnectedOverlayOpen]="shouldOpenEditandDeleteBoardsDropdown"
+                (overlayOutsideClick)="shouldOpenEditandDeleteBoardsDropdown = false" [cdkConnectedOverlayPositions]="[
+            {
+            originX:'end',
+            originY:'bottom',
+            overlayX:'end',
+            overlayY:'top', 
+            offsetY: 12
+        }]">
+                <div
+                    class="bg-white flex flex-col rounded-lg px-3 py-4 gap-4 z-[999] w-[12rem] shadow-[0_10px_20px_0_rgba(54,78,126,0.25)]">
+                    <button class="text-body-L text-medium-grey text-left">Edit Board</button>
+                    <button class="text-body-L text-red text-left">Delete Board</button>
+                </div>
+            </ng-template>
+        </button>
     </div>
 </header>
 

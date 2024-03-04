@@ -23,6 +23,7 @@ export class HeaderComponent {
   board: Signal<Board | undefined> = computed(() => this.boards().find(board => board.name == this.boardService.selectedBoard))
 
   shouldOpenBoards: boolean = false
+  shouldOpenEditandDeleteBoardsDropdown: boolean = false
 
   @ViewChild("addTaskRef") addTaskRef!: TemplateRef<any>
   @ViewChild("addBoardRef") addBoardRef!: TemplateRef<any>
