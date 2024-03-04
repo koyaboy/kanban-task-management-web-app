@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
+import { BoardService } from '../../../services/board.service';
 
 @Component({
   selector: 'app-delete-task',
@@ -9,5 +10,11 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeleteTaskComponent {
+  boardService: BoardService = inject(BoardService)
+
   @Input() title!: string
+
+  closeDeleteTaskModal() {
+    this.boardService.closeModal()
+  }
 }
