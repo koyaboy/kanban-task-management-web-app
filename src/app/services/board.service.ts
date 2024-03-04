@@ -19,7 +19,7 @@ export class BoardService {
 
   boards$ = this.http.get<Board[]>(`${this.apiUrl}/getBoards`).pipe(shareReplay(1))
   boards = toSignal(this.boards$, { initialValue: [] })
-  selectedBoard: string = this.boards()[2]?.name
+  selectedBoard: Board | undefined = this.boards()[2]
 
   config = new OverlayConfig({
     positionStrategy: this.overlay.position().global().centerVertically().centerHorizontally(),

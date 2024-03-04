@@ -31,16 +31,16 @@
 
                     <div class="flex flex-col gap-1">
                         <div *ngFor="let board of boards()" class="flex gap-3 items-center py-3 px-5 mr-5 rounded-r-3xl"
-                            [ngStyle]="{'background-color': board.name == this.boardService.selectedBoard ? '#635FC7':''}">
+                            [ngStyle]="{'background-color': board.name == this.boardService.selectedBoard?.name ? '#635FC7':''}">
                             <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M0 2.889A2.889 2.889 0 0 1 2.889 0H13.11A2.889 2.889 0 0 1 16 2.889V13.11A2.888 2.888 0 0 1 13.111 16H2.89A2.889 2.889 0 0 1 0 13.111V2.89Zm1.333 5.555v4.667c0 .859.697 1.556 1.556 1.556h6.889V8.444H1.333Zm8.445-1.333V1.333h-6.89A1.556 1.556 0 0 0 1.334 2.89V7.11h8.445Zm4.889-1.333H11.11v4.444h3.556V5.778Zm0 5.778H11.11v3.11h2a1.556 1.556 0 0 0 1.556-1.555v-1.555Zm0-7.112V2.89a1.555 1.555 0 0 0-1.556-1.556h-2v3.111h3.556Z"
                                     fill="#828FA3"
-                                    [ngStyle]="{'fill': board.name == this.boardService.selectedBoard ? 'white':''}" />
+                                    [ngStyle]="{'fill': board.name == this.boardService.selectedBoard?.name ? 'white':''}" />
                             </svg>
 
                             <h2 class="text-heading-M"
-                                [ngStyle]="{'color': board.name == this.boardService.selectedBoard ? 'white':'#828FA3'}">
+                                [ngStyle]="{'color': board.name == this.boardService.selectedBoard?.name ? 'white':'#828FA3'}">
                                 {{board.name}}</h2>
                         </div>
 
@@ -110,7 +110,8 @@
         }]">
                 <div
                     class="bg-white flex flex-col rounded-lg px-3 py-4 gap-4 z-[999] w-[12rem] shadow-[0_10px_20px_0_rgba(54,78,126,0.25)]">
-                    <button class="text-body-L text-medium-grey text-left">Edit Board</button>
+                    <button class="text-body-L text-medium-grey text-left" (click)="openEditBoardModal()">Edit
+                        Board</button>
                     <button class="text-body-L text-red text-left">Delete Board</button>
                 </div>
             </ng-template>
@@ -124,4 +125,8 @@
 
 <ng-template #addBoardRef>
     <app-add-board></app-add-board>
+</ng-template>
+
+<ng-template #editBoardRef>
+    <app-edit-board [board]="this.boardService.selectedBoard"></app-edit-board>
 </ng-template>
