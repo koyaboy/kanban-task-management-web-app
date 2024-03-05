@@ -121,7 +121,7 @@
 </header>
 
 <ng-template #addTaskRef>
-    <app-add-task></app-add-task>
+    <app-add-task [board]="this.boardService.selectedBoard"></app-add-task>
 </ng-template>
 
 <ng-template #addBoardRef>

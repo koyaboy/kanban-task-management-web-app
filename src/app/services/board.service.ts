@@ -4,7 +4,7 @@ import { Board } from '../model/board';
 import { toSignal } from "@angular/core/rxjs-interop"
 import { shareReplay } from 'rxjs/operators';
 import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
-import { CdkPortal, TemplatePortal } from '@angular/cdk/portal';
+import { TemplatePortal } from '@angular/cdk/portal';
 
 
 @Injectable({
@@ -27,6 +27,8 @@ export class BoardService {
   })
 
   overlayRef = this.overlay.create(this.config)
+
+
 
   openModal(portal: TemplatePortal<any>): void {
     this.overlayRef.attach(portal)

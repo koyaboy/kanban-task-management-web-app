@@ -4625,6 +4625,7 @@ export {
   noop,
   pipe,
   Observable,
+  createOperatorSubscriber,
   refCount,
   ConnectableObservable,
   Subject,
@@ -4633,6 +4634,7 @@ export {
   AsyncAction,
   AsyncScheduler,
   EMPTY,
+  popResultSelector,
   popScheduler,
   popNumber,
   isArrayLike,
@@ -4646,6 +4648,8 @@ export {
   timeout,
   map,
   mapOneOrManyArgs,
+  argsArgArrayOrObject,
+  createObject,
   combineLatest,
   mergeMap,
   mergeAll,
@@ -4757,4 +4761,4 @@ export {
   partition,
   race
 };
-//# sourceMappingURL=chunk-UY4AYOIX.js.map
+//# sourceMappingURL=chunk-O6DRYL7C.js.map

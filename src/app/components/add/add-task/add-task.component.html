@@ -1,17 +1,23 @@
 <div role="dialog" class="bg-white rounded-md p-6 w-[90vw]">
     <h1 class="text-heading-L text-black">Add Task</h1>
 
-    <form class="flex flex-col gap-5 mt-5">
+    <form [formGroup]="addTaskForm" class="flex flex-col gap-5 mt-5">
         <div class="flex flex-col gap-2">
             <label for="title" class="font-bold text-[0.75rem] text-medium-grey">Title</label>
-            <input type="text" id="title"
+            <input formControlName="title" type="text" id="title"
                 class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 text-body-L text-black"
                 placeholder="e.g Take a cofee break" />
+
+            <!-- <span
+                *ngIf="this.addTaskForm.get('title')?.hasError('required') && this.addTaskForm.get('title')?.dirty || this.addTaskForm.get('title')?.touched"
+                class="form-validation-error-message">
+                Can't be empty
+            </span> -->
         </div>
 
         <div class="flex flex-col gap-2">
             <label for="description" class="font-bold text-[0.75rem] text-medium-grey">Description</label>
-            <textarea id="description"
+            <textarea formControlName="description" id="description"
                 placeholder="e.g. It's always good to take a break. This 15 minute break will  recharge the batteries a little."
                 class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 text-body-L text-black h-[7rem] resize-none"></textarea>
         </div>
@@ -19,42 +25,36 @@
         <fieldset class="flex flex-col gap-3">
             <legend class="font-bold text-[0.75rem] text-medium-grey mb-2">Subtasks</legend>
 
-            <div class="flex justify-between items-center gap-[0.6rem]">
-                <input type="text" placeholder="e.g. Make Coffee"
-                    class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black" />
-                <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg ">
-                    <g fill="#828FA3" fill-rule="evenodd">
-                        <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
-                        <path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" />
-                    </g>
-                </svg>
+            <div formArrayName="subtasks" class="flex flex-col gap-3">
+                <div *ngFor="let subtask of subtasks.controls; let i = index"
+                    class="flex justify-between items-center gap-[0.6rem]">
+                    <input type="text" [placeholder]='i == 0 ? "e.g Make Coffee ": (i === 1 ? "e.g Drink Coffee":"")'
+                        class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black" />
+                    <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg ">
+                        <g fill="#828FA3" fill-rule="evenodd">
+                            <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
+                            <path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" />
+                        </g>
+                    </svg>
+                </div>
             </div>
 
-            <div class="flex justify-between items-center gap-[0.6rem]">
-                <input type="text" placeholder="e.g. Drink coffee and smile"
-                    class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black" />
-                <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg">
-                    <g fill="#828FA3" fill-rule="evenodd">
-                        <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
-                        <path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" />
-                    </g>
-                </svg>
-            </div>
-
-            <button
+            <button (click)="addSubtask()"
                 class="bg-[#635FC7] bg-opacity-10 rounded-[1.25rem] py-2 text-purple font-bold text-[0.813rem] leading-[1.438rem]">+
                 Add New Subtask</button>
         </fieldset>
 
         <div class="flex flex-col gap-2">
             <label for="status" class="font-bold text-[0.75rem] text-medium-grey">Status</label>
-            <select id="status"
+            <select formControlName="status" id="status"
                 class="w-full rounded-[0.25rem] border border-[#828FA3] mt-1 p-2 text-black text-body-L">
-                <option>Todo</option>
+                <option *ngFor="let column of board?.columns" [value]="column.name">{{column.name}}</option>
             </select>
         </div>
 
-        <button class="bg-purple py-2 text-white rounded-[1.25rem] font-bold text-[0.813rem] leading-[1.438rem]">Create
+        <button
+            class="bg-purple py-2 text-white rounded-[1.25rem] font-bold text-[0.813rem] leading-[1.438rem] disabled:opacity-50 disabled:cursor-not-allowed"
+            [disabled]="addTaskForm.invalid">Create
             Task</button>
     </form>
 </div>

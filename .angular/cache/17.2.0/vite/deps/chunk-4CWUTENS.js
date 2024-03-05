@@ -12,6 +12,9 @@ import {
   __spreadArray,
   __spreadProps,
   __spreadValues,
+  argsArgArrayOrObject,
+  createObject,
+  createOperatorSubscriber,
   first,
   from,
   innerFrom,
@@ -23,8 +26,9 @@ import {
   mergeMap,
   noop,
   popNumber,
+  popResultSelector,
   popScheduler
-} from "./chunk-UY4AYOIX.js";
+} from "./chunk-O6DRYL7C.js";
 
 // node_modules/@angular/core/fesm2022/primitives/signals.mjs
 function defaultEquals(a, b) {
@@ -820,6 +824,49 @@ function defer(observableFactory) {
   return new Observable(function(subscriber) {
     innerFrom(observableFactory()).subscribe(subscriber);
   });
+}
+
+// node_modules/rxjs/dist/esm5/internal/observable/forkJoin.js
+function forkJoin() {
+  var args = [];
+  for (var _i = 0; _i < arguments.length; _i++) {
+    args[_i] = arguments[_i];
+  }
+  var resultSelector = popResultSelector(args);
+  var _a = argsArgArrayOrObject(args), sources = _a.args, keys = _a.keys;
+  var result = new Observable(function(subscriber) {
+    var length = sources.length;
+    if (!length) {
+      subscriber.complete();
+      return;
+    }
+    var values = new Array(length);
+    var remainingCompletions = length;
+    var remainingEmissions = length;
+    var _loop_1 = function(sourceIndex2) {
+      var hasValue = false;
+      innerFrom(sources[sourceIndex2]).subscribe(createOperatorSubscriber(subscriber, function(value) {
+        if (!hasValue) {
+          hasValue = true;
+          remainingEmissions--;
+        }
+        values[sourceIndex2] = value;
+      }, function() {
+        return remainingCompletions--;
+      }, void 0, function() {
+        if (!remainingCompletions || !hasValue) {
+          if (!remainingEmissions) {
+            subscriber.next(keys ? createObject(keys, values) : values);
+          }
+          subscriber.complete();
+        }
+      }));
+    };
+    for (var sourceIndex = 0; sourceIndex < length; sourceIndex++) {
+      _loop_1(sourceIndex);
+    }
+  });
+  return resultSelector ? result.pipe(mapOneOrManyArgs(resultSelector)) : result;
 }
 
 // node_modules/rxjs/dist/esm5/internal/observable/fromEvent.js
@@ -21297,6 +21344,7 @@ export {
   animationFrameScheduler,
   isObservable,
   defer,
+  forkJoin,
   fromEvent,
   merge,
   XSS_SECURITY_URL,
@@ -21780,4 +21828,4 @@ export {
    * found in the LICENSE file at https://angular.io/license
    *)
 */
-//# sourceMappingURL=chunk-DAIUCXBO.js.map
+//# sourceMappingURL=chunk-4CWUTENS.js.map
