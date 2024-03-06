@@ -1,7 +1,7 @@
 <div role="dialog" class="bg-white rounded-md p-6 w-[90vw]">
     <h1 class="text-heading-L text-black">Add Task</h1>
 
-    <form [formGroup]="addTaskForm" class="flex flex-col gap-5 mt-5">
+    <form [formGroup]="addTaskForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5 mt-5">
         <div class="flex flex-col gap-2">
             <label for="title" class="font-bold text-[0.75rem] text-medium-grey">Title</label>
 
@@ -29,17 +29,17 @@
             <legend class="font-bold text-[0.75rem] text-medium-grey mb-2">Subtasks</legend>
 
             <div formArrayName="subtasks" class="flex flex-col gap-3">
-                <div *ngFor="let subtask of subtasks.controls; let i = index"
+                <div *ngFor="let subtaskGroup of subtasks.controls; let i = index" [formGroupName]="i"
                     class="flex justify-between items-center gap-[0.6rem]">
 
                     <div class="relative w-full">
                         <input type="text"
                             [placeholder]='i == 0 ? "e.g Make Coffee ": (i === 1 ? "e.g Drink Coffee":"")'
                             class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black"
-                            [formControlName]="i">
+                            formControlName="title">
 
                         <span
-                            *ngIf="this.addTaskForm.get('subtasks.' + i)?.hasError('required') && (this.addTaskForm.get('subtasks.' + i)?.dirty || this.addTaskForm.get('subtasks.' + i)?.touched )"
+                            *ngIf="subtaskGroup.get('title')?.hasError('required') && (subtaskGroup.get('title')?.dirty|| subtaskGroup.get('title')?.touched )"
                             class="form-validation-error-message">
                             Can't be empty
                         </span>
@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            <button (click)="addSubtask()"
+            <button (click)="addSubtask()" type="button"
                 class="bg-[#635FC7] bg-opacity-10 rounded-[1.25rem] py-2 text-purple font-bold text-[0.813rem] leading-[1.438rem]">+
                 Add New Subtask</button>
         </fieldset>

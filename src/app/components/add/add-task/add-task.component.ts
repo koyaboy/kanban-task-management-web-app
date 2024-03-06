@@ -3,6 +3,8 @@ import { Component, inject, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Board } from '../../../model/board';
+import { BoardService } from '../../../services/board.service';
+import { Subtask } from '../../../model/subtask';
 
 @Component({
   selector: 'app-add-task',
@@ -12,6 +14,7 @@ import { Board } from '../../../model/board';
   styleUrl: './add-task.component.css'
 })
 export class AddTaskComponent {
+  boardService: BoardService = inject(BoardService)
   fb: FormBuilder = inject(FormBuilder)
 
   @Input() board!: Board | undefined
@@ -22,8 +25,16 @@ export class AddTaskComponent {
     this.addTaskForm = this.fb.group({
       title: ['', Validators.required],
       description: '',
-      subtasks: this.fb.array(
-        [this.fb.control('', Validators.required), this.fb.control('', Validators.required)]),
+      subtasks: this.fb.array([
+        this.fb.group({
+          title: ['', Validators.required],
+          isCompleted: false
+        }),
+        this.fb.group({
+          title: ['', Validators.required],
+          isCompleted: false
+        })
+      ]),
       status: [this.board?.columns[0].name, Validators.required]
     })
   }
@@ -33,7 +44,7 @@ export class AddTaskComponent {
   }
 
   addSubtask(): void {
-    this.subtasks.push(this.fb.control('', Validators.required))
+    this.subtasks.push(this.fb.group({ title: ['', Validators.required], isCompleted: false }))
   }
 
   removeSubtask(index: number): void {
@@ -42,6 +53,21 @@ export class AddTaskComponent {
 
 
   onSubmit(): void {
-    console.log(this.addTaskForm)
+    const { title, description, subtasks, status } = this.addTaskForm.value
+
+    const data = {
+      title: title,
+      description: description,
+      subtasks: subtasks,
+      status: status
+    }
+
+    this.boardService.addTask(data).subscribe()
+
+    //OPTIMISTICALLY UPDATE UI
+    let selectedColumn = this.board?.columns.find((column) => column.name == status)
+    selectedColumn?.tasks.push(data)
+
+    this.boardService.closeModal()
   }
 }
