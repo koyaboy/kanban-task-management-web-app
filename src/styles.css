@@ -8,3 +8,14 @@
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
+
+.form-validation-error-message {
+    color: #EA5555;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 8px;
+    font-size: 0.813rem;
+    line-height: '1.438rem';
+    font-weight: '500';
+}

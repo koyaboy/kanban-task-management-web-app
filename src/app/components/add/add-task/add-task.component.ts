@@ -22,11 +22,10 @@ export class AddTaskComponent {
     this.addTaskForm = this.fb.group({
       title: ['', Validators.required],
       description: '',
-      subtasks: this.fb.array(['', '']),
+      subtasks: this.fb.array(
+        [this.fb.control('', Validators.required), this.fb.control('', Validators.required)]),
       status: [this.board?.columns[0].name, Validators.required]
     })
-
-    console.log(this.addTaskForm.get('status'))
   }
 
   get subtasks() {
@@ -34,7 +33,7 @@ export class AddTaskComponent {
   }
 
   addSubtask(): void {
-    this.subtasks.push(this.fb.control(''))
+    this.subtasks.push(this.fb.control('', Validators.required))
   }
 
 
