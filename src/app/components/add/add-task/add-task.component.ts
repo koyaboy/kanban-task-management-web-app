@@ -36,6 +36,10 @@ export class AddTaskComponent {
     this.subtasks.push(this.fb.control('', Validators.required))
   }
 
+  removeSubtask(index: number): void {
+    this.subtasks.removeAt(index)
+  }
+
 
   onSubmit(): void {
     console.log(this.addTaskForm)
