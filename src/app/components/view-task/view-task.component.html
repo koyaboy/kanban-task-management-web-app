@@ -32,8 +32,8 @@
     <div>
         <h3 class="font-bold text-[0.75rem] text-medium-grey">Current Status</h3>
         <select class="w-full rounded-[0.25rem] border border-[#828FA3] mt-1 p-2 text-black text-body-L">
-            <option [defaultSelected]="status">{{status}}</option>
-            <option>Test</option>
+            <option *ngFor="let column of board?.columns" [selected]="status == column.name" [value]="column.name">
+                {{column.name}}</option>
         </select>
     </div>
 

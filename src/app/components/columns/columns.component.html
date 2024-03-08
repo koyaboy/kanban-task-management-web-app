@@ -20,6 +20,6 @@
 </div>
 
 <ng-template #viewTaskRef>
-    <app-view-task [title]="taskTitle" [description]="taskDescription" [subtasks]="taskSubtasks"
-        [status]="taskStatus"></app-view-task>
+    <app-view-task [board]="this.boardService.selectedBoard" [title]="taskTitle" [description]="taskDescription"
+        [subtasks]="taskSubtasks" [status]="taskStatus"></app-view-task>
 </ng-template>
