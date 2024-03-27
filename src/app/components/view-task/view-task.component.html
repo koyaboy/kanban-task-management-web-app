@@ -64,6 +64,6 @@
     </div>
 
     <div *ngIf="shouldOpenDeleteTaskModal">
-        <app-delete-task [title]="title"></app-delete-task>
+        <app-delete-task [taskId]="id" [title]="title" [taskStatus]="status"></app-delete-task>
     </div>
 </ng-template>

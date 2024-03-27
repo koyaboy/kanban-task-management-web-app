@@ -47,4 +47,8 @@ export class BoardService {
   editTask(data: object, taskId: string, boardId: string, columnName: string) {
     return this.http.put(`${this.apiUrl}/editTask/${taskId}`, { data, selectedBoardId: boardId, columnName: columnName })
   }
+
+  deleteTask(taskId: string, boardId: string, status: string) {
+    return this.http.delete(`${this.apiUrl}/deleteTask/${taskId}/${boardId}/${status}`)
+  }
 }
