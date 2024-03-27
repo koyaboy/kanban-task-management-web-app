@@ -5,6 +5,8 @@ import { Board } from '../../../model/board';
 import { BoardService } from '../../../services/board.service';
 import { FormBuilder, Validators, FormGroup, FormArray, FormControl } from '@angular/forms';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { Column } from '../../../model/column';
+import { Task } from '../../../model/task';
 
 @Component({
   selector: 'app-edit-task',
@@ -66,15 +68,25 @@ export class EditTaskComponent {
       status: status
     }
 
-    this.boardService.editTask(data, this.taskId, boardId, this.taskStatus).subscribe(() => {
-      this.boardService.closeModal()
-    })
+    this.boardService.editTask(data, this.taskId, boardId, this.taskStatus).subscribe()
 
+    //OPTIMISTICALLY UPDATE UI
+    let selectedColumn = this.board?.columns.find((column) => column.name == this.taskStatus) as Column
+    let task = selectedColumn.tasks.find(task => task._id == this.taskId) as Task
+    let taskIndex = selectedColumn.tasks.findIndex(task => task._id == this.taskId)
 
-    // //OPTIMISTICALLY UPDATE UI
-    // let selectedColumn = this.board?.columns.find((column) => column.name == status)
-    // selectedColumn?.tasks.push(data)
+    task.title = title
+    task.description = description
+    task.subtasks = subtasks
+    task.status = status
 
-    // this.boardService.closeModal()
+    //Move task to new column if status changes and remove it from the old one
+    if (status !== this.taskStatus) {
+      let newColumn = this.board?.columns.find((column) => column.name == status) as Column
+      newColumn.tasks.unshift(task)
+      selectedColumn.tasks.splice(taskIndex, 1)
+    }
+
+    this.boardService.closeModal()
   }
 }

@@ -66,11 +66,6 @@ export class AddTaskComponent {
       status: status
     }
 
-    //OPTIMISTICALLY UPDATE UI
-    let selectedColumn = this.board?.columns.find((column) => column.name == status) as Column
-    selectedColumn.tasks.push({ _id: tempId, ...data })
-    this.boardService.closeModal()
-
     //Make server reuest to add task
     this.boardService.addTask(data).subscribe((res: Task) => {
       let actualId = res._id
@@ -82,5 +77,9 @@ export class AddTaskComponent {
       }
     })
 
+    //OPTIMISTICALLY UPDATE UI
+    let selectedColumn = this.board?.columns.find((column) => column.name == status) as Column
+    selectedColumn.tasks.push({ _id: tempId, ...data })
+    this.boardService.closeModal()
   }
 }
