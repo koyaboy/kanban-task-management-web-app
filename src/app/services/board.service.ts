@@ -39,7 +39,7 @@ export class BoardService {
   }
 
   addTask(data: any) {
-    return this.http.post(`${this.apiUrl}/addTask`, { boardId: this.selectedBoard?._id, ...data })
+    return this.http.post<Task>(`${this.apiUrl}/addTask`, { boardId: this.selectedBoard?._id, ...data })
     // .pipe(switchMap(() => this.boards$ = this.http.get<Board[]>(`${this.apiUrl}/getBoards`).pipe(shareReplay(1)))
     // )
   }

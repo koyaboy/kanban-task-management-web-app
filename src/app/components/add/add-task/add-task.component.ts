@@ -5,6 +5,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Board } from '../../../model/board';
 import { BoardService } from '../../../services/board.service';
 import { Subtask } from '../../../model/subtask';
+import { Task } from "../../../model/task";
+import { Column } from '../../../model/column';
 
 @Component({
   selector: 'app-add-task',
@@ -55,6 +57,8 @@ export class AddTaskComponent {
   onSubmit(): void {
     const { title, description, subtasks, status } = this.addTaskForm.value
 
+    const tempId = Math.random().toString(36).substring(2, 15);
+
     const data = {
       title: title,
       description: description,
@@ -62,12 +66,21 @@ export class AddTaskComponent {
       status: status
     }
 
-    this.boardService.addTask(data).subscribe()
-
     //OPTIMISTICALLY UPDATE UI
-    let selectedColumn = this.board?.columns.find((column) => column.name == status)
-    // selectedColumn?.tasks.push(data)
-
+    let selectedColumn = this.board?.columns.find((column) => column.name == status) as Column
+    selectedColumn.tasks.push({ _id: tempId, ...data })
     this.boardService.closeModal()
+
+    //Make server reuest to add task
+    this.boardService.addTask(data).subscribe((res: Task) => {
+      let actualId = res._id
+
+      let taskIndex = selectedColumn?.tasks.findIndex((task) => task._id == tempId)
+
+      if (taskIndex) {
+        selectedColumn.tasks[taskIndex]._id = actualId
+      }
+    })
+
   }
 }
