@@ -38,9 +38,13 @@ export class BoardService {
     this.overlayRef.detach()
   }
 
-  addTask(data: Task) {
+  addTask(data: any) {
     return this.http.post(`${this.apiUrl}/addTask`, { boardId: this.selectedBoard?._id, ...data })
     // .pipe(switchMap(() => this.boards$ = this.http.get<Board[]>(`${this.apiUrl}/getBoards`).pipe(shareReplay(1)))
     // )
+  }
+
+  editTask(data: object, taskId: string, boardId: string, columnName: string) {
+    return this.http.put(`${this.apiUrl}/editTask/${taskId}`, { data, selectedBoardId: boardId, columnName: columnName })
   }
 }

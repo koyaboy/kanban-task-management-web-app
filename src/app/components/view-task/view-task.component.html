@@ -1,4 +1,5 @@
-<div class="bg-white p-6 flex flex-col gap-5 rounded-md w-[90vw]" role="dialog">
+<div class="bg-white p-6 flex flex-col gap-5 rounded-md w-[90vw]" role="dialog"
+    *ngIf="!shouldOpenEditTaskModal && !shouldOpenDeleteTaskModal; else elseBlock ">
     <div class="flex items-center justify-between">
         <h1 class="text-heading-L text-black w-[85%]">{{title}}</h1>
         <button #triggerOptions="cdkOverlayOrigin" cdkOverlayOrigin
@@ -54,13 +55,15 @@
             <button class="text-body-L text-red text-left" (click)="openDeleteTaskModal()">Delete Task</button>
         </div>
     </ng-template>
-
-    <ng-template #editTaskRef>
-        <app-edit-task [title]="title" [description]="description" [subtasks]="subtasks"
-            [status]="status"></app-edit-task>
-    </ng-template>
-
-    <ng-template #deleteTaskRef>
-        <app-delete-task [title]="title"></app-delete-task>
-    </ng-template>
 </div>
+
+<ng-template #elseBlock>
+    <div *ngIf="shouldOpenEditTaskModal">
+        <app-edit-task [board]="board" [taskId]="id" [taskSubtasks]="subtasks" [taskTitle]="title"
+            [taskDescription]="description" [taskStatus]="status"></app-edit-task>
+    </div>
+
+    <div *ngIf="shouldOpenDeleteTaskModal">
+        <app-delete-task [title]="title"></app-delete-task>
+    </div>
+</ng-template>

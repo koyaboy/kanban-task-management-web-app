@@ -1,51 +1,75 @@
 <div role="dialog" class="bg-white rounded-md p-6 w-[90vw]">
     <h1 class="text-heading-L text-black">Edit Task</h1>
 
-    <form class="flex flex-col gap-5 mt-5">
+    <form [formGroup]="editTaskForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5 mt-5">
         <div class="flex flex-col gap-2">
             <label for="title" class="font-bold text-[0.75rem] text-medium-grey">Title</label>
-            <input type="text" id="title"
-                class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 text-body-L text-black"
-                placeholder="e.g Take a cofee break" [value]="title" />
+
+            <div class="relative">
+                <input formControlName="title" type="text" id="title"
+                    class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 text-body-L text-black w-full" />
+
+                <span
+                    *ngIf="this.editTaskForm.get('title')?.hasError('required') && (this.editTaskForm.get('title')?.dirty || this.editTaskForm.get('title')?.touched)"
+                    class="form-validation-error-message">
+                    Can't be empty
+                </span>
+            </div>
         </div>
 
         <div class="flex flex-col gap-2">
             <label for="description" class="font-bold text-[0.75rem] text-medium-grey">Description</label>
-            <textarea id="description"
+            <textarea formControlName="description" id="description"
                 placeholder="e.g. It's always good to take a break. This 15 minute break will  recharge the batteries a little."
-                class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 text-body-L text-black h-[7rem] resize-none"
-                [value]="description"></textarea>
+                class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 text-body-L text-black h-[7rem] resize-none"></textarea>
         </div>
 
         <fieldset class="flex flex-col gap-3">
             <legend class="font-bold text-[0.75rem] text-medium-grey mb-2">Subtasks</legend>
 
-            <div class="flex justify-between items-center gap-[0.6rem]" *ngFor="let subtask of subtasks">
-                <input type="text" placeholder="e.g. Make Coffee"
-                    class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black"
-                    [value]="subtask.title" />
-                <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg ">
-                    <g fill="#828FA3" fill-rule="evenodd">
-                        <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
-                        <path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" />
-                    </g>
-                </svg>
+            <div formArrayName="subtasks" class="flex flex-col gap-3">
+                <div *ngFor="let subtaskGroup of subtasks.controls; let i = index" [formGroupName]="i"
+                    class="flex justify-between items-center gap-[0.6rem]">
+
+                    <div class="relative w-full">
+                        <input type="text"
+                            class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black"
+                            formControlName="title">
+
+                        <span
+                            *ngIf="subtaskGroup.get('title')?.hasError('required') && (subtaskGroup.get('title')?.dirty|| subtaskGroup.get('title')?.touched )"
+                            class="form-validation-error-message">
+                            Can't be empty
+                        </span>
+                    </div>
+
+                    <button type="button" (click)="removeSubtask(i)">
+                        <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg ">
+                            <g fill="#828FA3" fill-rule="evenodd">
+                                <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
+                                <path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" />
+                            </g>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
-            <button
+            <button (click)="addSubtask()" type="button"
                 class="bg-[#635FC7] bg-opacity-10 rounded-[1.25rem] py-2 text-purple font-bold text-[0.813rem] leading-[1.438rem]">+
                 Add New Subtask</button>
         </fieldset>
 
         <div class="flex flex-col gap-2">
             <label for="status" class="font-bold text-[0.75rem] text-medium-grey">Status</label>
-            <select id="status"
+            <select formControlName="status" id="status"
                 class="w-full rounded-[0.25rem] border border-[#828FA3] mt-1 p-2 text-black text-body-L">
-                <option>{{status}}</option>
+                <option *ngFor="let column of board?.columns" [selected]="this.taskStatus == column.name"
+                    [value]="column.name">{{column.name}}</option>
             </select>
         </div>
 
-        <button class="bg-purple py-2 text-white rounded-[1.25rem] font-bold text-[0.813rem] leading-[1.438rem]">Save
-            Changes</button>
+        <button
+            class="bg-purple py-2 text-white rounded-[1.25rem] font-bold text-[0.813rem] leading-[1.438rem] disabled:opacity-50 disabled:cursor-not-allowed"
+            [disabled]="editTaskForm.invalid">Edit Task</button>
     </form>
 </div>

@@ -66,7 +66,7 @@ export class AddTaskComponent {
 
     //OPTIMISTICALLY UPDATE UI
     let selectedColumn = this.board?.columns.find((column) => column.name == status)
-    selectedColumn?.tasks.push(data)
+    // selectedColumn?.tasks.push(data)
 
     this.boardService.closeModal()
   }

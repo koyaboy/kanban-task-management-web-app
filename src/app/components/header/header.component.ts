@@ -15,7 +15,7 @@ import { NgFor, NgStyle } from '@angular/common';
   imports: [AddTaskComponent, AddBoardComponent, EditBoardComponent, DeleteBoardComponent, OverlayModule, NgFor, NgStyle],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent {
   boardService: BoardService = inject(BoardService)

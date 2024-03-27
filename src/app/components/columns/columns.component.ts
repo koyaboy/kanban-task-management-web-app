@@ -21,6 +21,7 @@ export class ColumnsComponent {
 
   @Input() columns: Column[] | undefined = []
 
+  taskId!: string
   taskTitle!: string
   taskDescription!: string
   taskSubtasks!: Array<Subtask>
@@ -38,7 +39,8 @@ export class ColumnsComponent {
     return task.subtasks.filter((subtask) => subtask.isCompleted).length
   }
 
-  viewTask(title: string, description: string, subtasks: Array<Subtask>, status: string): void {
+  viewTask(id: string, title: string, description: string, subtasks: Array<Subtask>, status: string): void {
+    this.taskId = id
     this.taskTitle = title
     this.taskDescription = description
     this.taskSubtasks = subtasks
