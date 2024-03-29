@@ -18,17 +18,17 @@ export class DeleteTaskComponent {
   @Input() title!: string
   @Input() taskStatus!: string
 
-  selectedBoard = this.boardService.selectedBoard as Board
+  selectedBoard = this.boardService.selectedBoard
 
   ngOnInit() {
     console.log(this.taskStatus)
   }
 
   deleteTask() {
-    this.boardService.deleteTask(this.taskId, this.selectedBoard._id, this.taskStatus).subscribe()
+    this.boardService.deleteTask(this.taskId, this.selectedBoard()._id, this.taskStatus).subscribe()
 
     //Optimistically update UI
-    let column = this.boardService.selectedBoard?.columns.find(column => column.name == this.taskStatus) as Column
+    let column = this.boardService.selectedBoard().columns.find(column => column.name == this.taskStatus) as Column
     let taskIndex = column.tasks.findIndex(task => task._id == this.taskId)
     column.tasks.splice(taskIndex, 1)
 

@@ -33,7 +33,8 @@
     <div>
         <h3 class="font-bold text-[0.75rem] text-medium-grey">Current Status</h3>
         <select class="w-full rounded-[0.25rem] border border-[#828FA3] mt-1 p-2 text-black text-body-L">
-            <option *ngFor="let column of board?.columns" [selected]="status == column.name" [value]="column.name">
+            <option *ngFor="let column of this.selectedBoard()?.columns" [selected]="status == column.name"
+                [value]="column.name">
                 {{column.name}}</option>
         </select>
     </div>
@@ -59,8 +60,8 @@
 
 <ng-template #elseBlock>
     <div *ngIf="shouldOpenEditTaskModal">
-        <app-edit-task [board]="board" [taskId]="id" [taskSubtasks]="subtasks" [taskTitle]="title"
-            [taskDescription]="description" [taskStatus]="status"></app-edit-task>
+        <app-edit-task [taskId]="id" [taskSubtasks]="subtasks" [taskTitle]="title" [taskDescription]="description"
+            [taskStatus]="status"></app-edit-task>
     </div>
 
     <div *ngIf="shouldOpenDeleteTaskModal">

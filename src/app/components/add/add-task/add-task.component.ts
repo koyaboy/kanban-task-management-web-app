@@ -19,7 +19,8 @@ export class AddTaskComponent {
   boardService: BoardService = inject(BoardService)
   fb: FormBuilder = inject(FormBuilder)
 
-  @Input() board!: Board | undefined
+  // @Input() board!: Board | undefined
+  board = this.boardService.selectedBoard
 
   addTaskForm!: FormGroup
 
@@ -37,7 +38,7 @@ export class AddTaskComponent {
           isCompleted: false
         })
       ]),
-      status: [this.board?.columns[0].name, Validators.required]
+      status: [this.board()?.columns[0].name, Validators.required]
     })
   }
 
@@ -78,7 +79,7 @@ export class AddTaskComponent {
     })
 
     //OPTIMISTICALLY UPDATE UI
-    let selectedColumn = this.board?.columns.find((column) => column.name == status) as Column
+    let selectedColumn = this.board()?.columns.find((column) => column.name == status) as Column
     selectedColumn.tasks.push({ _id: tempId, ...data })
     this.boardService.closeModal()
   }

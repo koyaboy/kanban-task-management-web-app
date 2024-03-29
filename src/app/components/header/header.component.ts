@@ -23,6 +23,7 @@ export class HeaderComponent {
 
   boards: Signal<Board[]> = this.boardService.boards
   board: Signal<Board | undefined> = computed(() => this.boards().find(board => board.name == this.boardService.selectedBoard?.name))
+  selectedBoard = this.boardService.selectedBoard
 
   shouldOpenBoards: boolean = false
   shouldOpenEditandDeleteBoardsDropdown: boolean = false
@@ -31,6 +32,11 @@ export class HeaderComponent {
   @ViewChild("addBoardRef") addBoardRef!: TemplateRef<any>
   @ViewChild("editBoardRef") editBoardRef!: TemplateRef<any>
   @ViewChild("deleteBoardRef") deleteBoardRef!: TemplateRef<any>
+
+  changeBoard(index: number) {
+    this.selectedBoard.set(this.boardService.boards()[index])
+    this.shouldOpenBoards = false
+  }
 
   openAddTaskModal() {
     const addTaskPortal = new TemplatePortal(this.addTaskRef, this.viewContainerRef)

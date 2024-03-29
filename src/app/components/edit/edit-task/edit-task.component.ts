@@ -19,7 +19,7 @@ export class EditTaskComponent {
   boardService: BoardService = inject(BoardService)
   fb: FormBuilder = inject(FormBuilder)
 
-  @Input() board!: Board | undefined
+  // @Input() board!: Board | undefined
   @Input() taskId!: string
   @Input() taskTitle!: string
   @Input() taskDescription!: string
@@ -27,6 +27,7 @@ export class EditTaskComponent {
   @Input() taskStatus!: string
 
   editTaskForm!: FormGroup
+  board = this.boardService.selectedBoard
 
   ngOnInit() {
     this.editTaskForm = this.fb.group({
@@ -59,7 +60,7 @@ export class EditTaskComponent {
   onSubmit(): void {
     const { title, description, subtasks, status } = this.editTaskForm.value
 
-    const boardId = this.board?._id as string
+    const boardId = this.board()?._id as string
 
     const data = {
       title: title,
@@ -71,7 +72,7 @@ export class EditTaskComponent {
     this.boardService.editTask(data, this.taskId, boardId, this.taskStatus).subscribe()
 
     //OPTIMISTICALLY UPDATE UI
-    let selectedColumn = this.board?.columns.find((column) => column.name == this.taskStatus) as Column
+    let selectedColumn = this.board()?.columns.find((column) => column.name == this.taskStatus) as Column
     let task = selectedColumn.tasks.find(task => task._id == this.taskId) as Task
     let taskIndex = selectedColumn.tasks.findIndex(task => task._id == this.taskId)
 
@@ -82,7 +83,7 @@ export class EditTaskComponent {
 
     //Move task to new column if status changes and remove it from the old one
     if (status !== this.taskStatus) {
-      let newColumn = this.board?.columns.find((column) => column.name == status) as Column
+      let newColumn = this.board()?.columns.find((column) => column.name == status) as Column
       newColumn.tasks.unshift(task)
       selectedColumn.tasks.splice(taskIndex, 1)
     }

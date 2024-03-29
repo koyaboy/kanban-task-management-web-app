@@ -1,4 +1,4 @@
-import { Injectable, inject, Signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Board } from '../model/board';
 import { toSignal } from "@angular/core/rxjs-interop"
@@ -20,7 +20,9 @@ export class BoardService {
 
   boards$ = this.http.get<Board[]>(`${this.apiUrl}/getBoards`).pipe(shareReplay(1))
   boards = toSignal(this.boards$, { initialValue: [] })
-  selectedBoard: Board | undefined = this.boards()[0]
+  // selectedBoard: Board | undefined = this.boards()[0]
+
+  selectedBoard = signal(this.boards()[0])
 
   config = new OverlayConfig({
     positionStrategy: this.overlay.position().global().centerVertically().centerHorizontally(),
@@ -39,7 +41,7 @@ export class BoardService {
   }
 
   addTask(data: any) {
-    return this.http.post<Task>(`${this.apiUrl}/addTask`, { boardId: this.selectedBoard?._id, ...data })
+    return this.http.post<Task>(`${this.apiUrl}/addTask`, { boardId: this.selectedBoard()?._id, ...data })
     // .pipe(switchMap(() => this.boards$ = this.http.get<Board[]>(`${this.apiUrl}/getBoards`).pipe(shareReplay(1)))
     // )
   }

@@ -16,5 +16,6 @@ export class BoardComponent {
 
   boards: Signal<Board[]> = this.boardService.boards
 
-  board: Signal<Board | undefined> = computed(() => this.boards().find(board => board.name == this.boardService.selectedBoard?.name))
+  board: Signal<Board | undefined> = computed(() => this.boards().find(board => board.name == this.boardService.selectedBoard().name))
+
 }

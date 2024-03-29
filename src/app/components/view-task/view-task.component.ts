@@ -21,13 +21,14 @@ export class ViewTaskComponent {
   boardService: BoardService = inject(BoardService)
   viewContainerRef: ViewContainerRef = inject(ViewContainerRef)
 
-  @Input() board !: Board | undefined
+  // @Input() board !: Board | undefined
   @Input() id!: string
   @Input() title!: string
   @Input() description!: string
   @Input() subtasks!: Array<Subtask>
   @Input() status!: string
 
+  selectedBoard = this.boardService.selectedBoard
   shouldOpenEditTaskModal: boolean = false
   shouldOpenDeleteTaskModal: boolean = false
   completedSubtasks!: number
