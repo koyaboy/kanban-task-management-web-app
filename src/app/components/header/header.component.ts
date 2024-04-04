@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Signal, computed, ViewChild, ViewContainerRef, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Signal, computed, ViewChild, ViewContainerRef, TemplateRef, signal } from '@angular/core';
 import { BoardService } from '../../services/board.service';
 import { Board } from '../../model/board';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -8,6 +8,7 @@ import { EditBoardComponent } from '../edit/edit-board/edit-board.component';
 import { DeleteBoardComponent } from '../delete/delete-board/delete-board.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NgFor, NgStyle } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-header',
@@ -63,5 +64,12 @@ export class HeaderComponent {
 
     const deleteBoardPortal = new TemplatePortal(this.deleteBoardRef, this.viewContainerRef)
     this.boardService.openModal(deleteBoardPortal)
+  }
+
+  handleBoardsUpdate(newBoards: Board[]) {
+    this.boards = this.boardService.boards
+    this.selectedBoard.set(this.boards()[this.boards().length - 1])
+    this.board = this.boardService.selectedBoard
+    this.boardService.closeModal()
   }
 }
