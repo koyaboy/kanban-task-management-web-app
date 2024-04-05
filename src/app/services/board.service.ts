@@ -6,6 +6,7 @@ import { shareReplay, switchMap, tap } from 'rxjs/operators';
 import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Task } from '../model/task'
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -19,14 +20,9 @@ export class BoardService {
   injector = inject(EnvironmentInjector);
 
   boards$ = this.http.get<Board[]>(`${this.apiUrl}/getBoards`).pipe(shareReplay(1))
-  boards = toSignal(this.boards$, { initialValue: [] })
 
-  // boards = signal(this.boards$)
-
-  // test = signal(this.boards$)
-  // selectedBoard: Board | undefined = this.boards()[0]
-
-  selectedBoard = signal(this.boards()[0])
+  private selectedBoard = new BehaviorSubject<Board>({ _id: '', name: '', columns: [] })
+  selectedBoard$ = this.selectedBoard.asObservable()
 
   config = new OverlayConfig({
     positionStrategy: this.overlay.position().global().centerVertically().centerHorizontally(),
@@ -45,15 +41,16 @@ export class BoardService {
   }
 
   addTask(data: any) {
-    return this.http.post<Task>(`${this.apiUrl}/addTask`, { boardId: this.selectedBoard()?._id, ...data })
+    return this.http.post<Task>(`${this.apiUrl}/addTask`, { boardId: this.selectedBoard.value._id, ...data })
   }
 
   getBoards() {
     this.boards$ = this.http.get<Board[]>(`${this.apiUrl}/getBoards`).pipe(shareReplay(1))
-    runInInjectionContext(this.injector, () => {
-      this.boards = toSignal(this.boards$) as Signal<Board[]>;
-    });
     return this.boards$
+  }
+
+  updateSelectedBoard(newBoard: Board) {
+    this.selectedBoard.next(newBoard)
   }
 
   addBoard(data: object) {

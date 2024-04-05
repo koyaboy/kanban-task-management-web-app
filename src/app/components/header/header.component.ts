@@ -7,13 +7,14 @@ import { AddBoardComponent } from '../add/add-board/add-board.component';
 import { EditBoardComponent } from '../edit/edit-board/edit-board.component';
 import { DeleteBoardComponent } from '../delete/delete-board/delete-board.component';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { NgFor, NgStyle } from '@angular/common';
+import { AsyncPipe, NgFor, NgStyle, NgIf } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [AddTaskComponent, AddBoardComponent, EditBoardComponent, DeleteBoardComponent, OverlayModule, NgFor, NgStyle],
+  imports: [AddTaskComponent, AddBoardComponent, EditBoardComponent, DeleteBoardComponent, OverlayModule, NgFor, NgStyle, NgIf, AsyncPipe],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   // changeDetection: ChangeDetectionStrategy.OnPush
@@ -22,20 +23,37 @@ export class HeaderComponent {
   boardService: BoardService = inject(BoardService)
   viewContainerRef: ViewContainerRef = inject(ViewContainerRef)
 
-  boards: Signal<Board[]> = this.boardService.boards
-  board: Signal<Board | undefined> = computed(() => this.boards().find(board => board.name == this.boardService.selectedBoard?.name))
-  selectedBoard = this.boardService.selectedBoard
-
-  shouldOpenBoards: boolean = false
-  shouldOpenEditandDeleteBoardsDropdown: boolean = false
-
   @ViewChild("addTaskRef") addTaskRef!: TemplateRef<any>
   @ViewChild("addBoardRef") addBoardRef!: TemplateRef<any>
   @ViewChild("editBoardRef") editBoardRef!: TemplateRef<any>
   @ViewChild("deleteBoardRef") deleteBoardRef!: TemplateRef<any>
 
+  boards$!: Observable<Board[]>
+  selectedBoard$!: Observable<Board>
+
+  boards!: Board[]
+  selectedBoard!: Board
+
+  shouldOpenBoards: boolean = false
+  shouldOpenEditandDeleteBoardsDropdown: boolean = false
+
+  ngOnInit() {
+    this.boards$ = this.boardService.boards$
+    this.selectedBoard$ = this.boardService.selectedBoard$
+
+    this.boardService.boards$.subscribe((boards) => {
+      this.boards = boards
+    })
+
+    this.boardService.selectedBoard$.subscribe((selectedBoard) => {
+      this.selectedBoard = selectedBoard
+    })
+  }
   changeBoard(index: number) {
-    this.selectedBoard.set(this.boardService.boards()[index])
+    this.boardService.boards$.subscribe((boards) => {
+      this.boardService.updateSelectedBoard(boards[index])
+    })
+
     this.shouldOpenBoards = false
   }
 
@@ -67,9 +85,10 @@ export class HeaderComponent {
   }
 
   handleBoardsUpdate(newBoards: Board[]) {
-    this.boards = this.boardService.boards
-    this.selectedBoard.set(this.boards()[this.boards().length - 1])
-    this.board = this.boardService.selectedBoard
+    this.boards$ = this.boardService.boards$
+    this.boards = newBoards
+    let newSelectedBoardIndex = this.boards[this.boards.length - 1]
+    this.boardService.updateSelectedBoard(newSelectedBoardIndex)
     this.boardService.closeModal()
   }
 }

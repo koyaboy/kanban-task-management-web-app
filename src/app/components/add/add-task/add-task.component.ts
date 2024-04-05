@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -7,11 +7,12 @@ import { BoardService } from '../../../services/board.service';
 import { Subtask } from '../../../model/subtask';
 import { Task } from "../../../model/task";
 import { Column } from '../../../model/column';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-task',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, NgFor, NgIf],
+  imports: [ReactiveFormsModule, FormsModule, NgFor, NgIf, AsyncPipe],
   templateUrl: './add-task.component.html',
   styleUrl: './add-task.component.css'
 })
@@ -19,12 +20,18 @@ export class AddTaskComponent {
   boardService: BoardService = inject(BoardService)
   fb: FormBuilder = inject(FormBuilder)
 
-  // @Input() board!: Board | undefined
-  board = this.boardService.selectedBoard
-
+  selectedBoard!: Board
+  initialStatus!: string
   addTaskForm!: FormGroup
+  subscription!: Subscription
 
   ngOnInit() {
+    this.subscription = this.boardService.selectedBoard$.subscribe((selectedBoard) => {
+      this.selectedBoard = selectedBoard
+    })
+
+    if (this.selectedBoard.columns) this.initialStatus = this.selectedBoard?.columns[0].name
+
     this.addTaskForm = this.fb.group({
       title: ['', Validators.required],
       description: '',
@@ -38,7 +45,7 @@ export class AddTaskComponent {
           isCompleted: false
         })
       ]),
-      status: [this.board()?.columns[0].name, Validators.required]
+      status: [this.initialStatus, Validators.required]
     })
   }
 
@@ -67,20 +74,23 @@ export class AddTaskComponent {
       status: status
     }
 
+    //OPTIMISTICALLY UPDATE UI
+    let selectedColumn = this.selectedBoard.columns?.find((column) => column.name == status) as Column
+    selectedColumn.tasks?.push({ _id: tempId, ...data })
+    this.boardService.closeModal()
+
     //Make server reuest to add task
     this.boardService.addTask(data).subscribe((res: Task) => {
       let actualId = res._id
+      let taskIndex = selectedColumn.tasks?.findIndex((task) => task._id == tempId)
 
-      let taskIndex = selectedColumn?.tasks.findIndex((task) => task._id == tempId)
-
-      if (taskIndex) {
+      if (taskIndex && selectedColumn.tasks) {
         selectedColumn.tasks[taskIndex]._id = actualId
       }
     })
+  }
 
-    //OPTIMISTICALLY UPDATE UI
-    let selectedColumn = this.board()?.columns.find((column) => column.name == status) as Column
-    selectedColumn.tasks.push({ _id: tempId, ...data })
-    this.boardService.closeModal()
+  ngOnDestroy() {
+    this.subscription.unsubscribe()
   }
 }

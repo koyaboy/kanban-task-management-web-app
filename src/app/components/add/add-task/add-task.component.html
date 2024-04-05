@@ -65,7 +65,7 @@
             <label for="status" class="font-bold text-[0.75rem] text-medium-grey">Status</label>
             <select formControlName="status" id="status"
                 class="w-full rounded-[0.25rem] border border-[#828FA3] mt-1 p-2 text-black text-body-L">
-                <option *ngFor="let column of board()?.columns" [value]="column.name">{{column.name}}</option>
+                <option *ngFor="let column of selectedBoard.columns" [value]="column.name">{{column.name}}</option>
             </select>
         </div>
 

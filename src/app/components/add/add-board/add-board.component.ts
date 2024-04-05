@@ -1,7 +1,6 @@
 import { NgFor } from '@angular/common';
 import { Component, Output, inject, EventEmitter } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule, FormsModule, FormArray } from '@angular/forms';
-import { toSignal } from "@angular/core/rxjs-interop"
+import { FormBuilder, Validators, ReactiveFormsModule, FormsModule, FormArray, FormGroup } from '@angular/forms';
 import { BoardService } from '../../../services/board.service';
 import { Board } from '../../../model/board';
 
@@ -18,14 +17,17 @@ export class AddBoardComponent {
 
   @Output() updatedBoards: EventEmitter<Board[]> = new EventEmitter()
 
-  selectedBoard = this.boardService.selectedBoard
-  addBoardForm = this.fb.group({
-    boardName: ['', Validators.required],
-    boardColumns: this.fb.array([
-      this.fb.group({ name: ['Todo', Validators.required] }),
-      this.fb.group({ name: ['Doing', Validators.required] })
-    ])
-  })
+  addBoardForm!: FormGroup
+
+  ngOnInit() {
+    this.addBoardForm = this.fb.group({
+      boardName: ['', Validators.required],
+      boardColumns: this.fb.array([
+        this.fb.group({ name: ['Todo', Validators.required] }),
+        this.fb.group({ name: ['Doing', Validators.required] })
+      ])
+    })
+  }
 
   get boardColumns() {
     return this.addBoardForm.get('boardColumns') as FormArray;

@@ -7,6 +7,7 @@ import { FormBuilder, Validators, FormGroup, FormArray, FormControl } from '@ang
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Column } from '../../../model/column';
 import { Task } from '../../../model/task';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-task',
@@ -22,18 +23,23 @@ export class EditTaskComponent {
   // @Input() board!: Board | undefined
   @Input() taskId!: string
   @Input() taskTitle!: string
-  @Input() taskDescription!: string
-  @Input() taskSubtasks!: Array<Subtask>
+  @Input() taskDescription!: string | undefined
+  @Input() taskSubtasks!: Array<Subtask> | undefined
   @Input() taskStatus!: string
 
   editTaskForm!: FormGroup
-  board = this.boardService.selectedBoard
+  subscription!: Subscription
+  selectedBoard!: Board
 
   ngOnInit() {
+    this.subscription = this.boardService.selectedBoard$.subscribe((selectedBoard) => {
+      this.selectedBoard = selectedBoard
+    })
+
     this.editTaskForm = this.fb.group({
       title: [this.taskTitle, Validators.required],
       description: this.taskDescription,
-      subtasks: this.fb.array(this.taskSubtasks.map(subtask =>
+      subtasks: this.fb.array((this.taskSubtasks ?? []).map(subtask =>
         this.fb.group({
           title: [subtask.title, Validators.required],
           isCompleted: subtask.isCompleted
@@ -60,7 +66,7 @@ export class EditTaskComponent {
   onSubmit(): void {
     const { title, description, subtasks, status } = this.editTaskForm.value
 
-    const boardId = this.board()?._id as string
+    const boardId = this.selectedBoard._id as string
 
     const data = {
       title: title,
@@ -72,9 +78,9 @@ export class EditTaskComponent {
     this.boardService.editTask(data, this.taskId, boardId, this.taskStatus).subscribe()
 
     //OPTIMISTICALLY UPDATE UI
-    let selectedColumn = this.board()?.columns.find((column) => column.name == this.taskStatus) as Column
-    let task = selectedColumn.tasks.find(task => task._id == this.taskId) as Task
-    let taskIndex = selectedColumn.tasks.findIndex(task => task._id == this.taskId)
+    let selectedColumn = this.selectedBoard.columns?.find((column) => column.name == this.taskStatus) as Column
+    let task = selectedColumn.tasks?.find(task => task._id == this.taskId) as Task
+    let taskIndex = selectedColumn.tasks?.findIndex(task => task._id == this.taskId)
 
     task.title = title
     task.description = description
@@ -82,10 +88,10 @@ export class EditTaskComponent {
     task.status = status
 
     //Move task to new column if status changes and remove it from the old one
-    if (status !== this.taskStatus) {
-      let newColumn = this.board()?.columns.find((column) => column.name == status) as Column
-      newColumn.tasks.unshift(task)
-      selectedColumn.tasks.splice(taskIndex, 1)
+    if (status !== this.taskStatus && taskIndex) {
+      let newColumn = this.selectedBoard.columns?.find((column) => column.name == status) as Column
+      newColumn.tasks?.unshift(task)
+      selectedColumn.tasks?.splice(taskIndex, 1)
     }
 
     this.boardService.closeModal()

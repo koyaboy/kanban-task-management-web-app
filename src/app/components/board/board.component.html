@@ -1,5 +1,9 @@
 <main>
-    <div *ngIf="!board().columns; else displayColumns" class="mx-3">
+    <div *ngIf="selectedBoard$ | async; else displayEmptyBoard" class="mx-3">
+        <app-columns></app-columns>
+    </div>
+
+    <ng-template #displayEmptyBoard>
         <div class="flex flex-col gap-6 min-h-screen justify-center items-center">
             <p class="text-heading-L text-medium-grey text-center">This board is empty. Create a new column to get
                 started.</p>
@@ -7,10 +11,6 @@
                 class="w-[10.875rem] h-12 flex justify-center items-center bg-purple text-heading-M text-white rounded-3xl">+
                 Add New Column</button>
         </div>
-    </div>
-
-    <ng-template #displayColumns>
-        <app-columns [columns]="board().columns"></app-columns>
     </ng-template>
 
 </main>

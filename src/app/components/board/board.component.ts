@@ -3,21 +3,31 @@ import { ColumnsComponent } from '../columns/columns.component';
 import { BoardService } from '../../services/board.service';
 import { Board } from '../../model/board';
 import { NgIf } from '@angular/common';
+import { Observable, Subscription } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [ColumnsComponent, NgIf],
+  imports: [ColumnsComponent, NgIf, AsyncPipe],
   templateUrl: './board.component.html',
   styleUrl: './board.component.css'
 })
 export class BoardComponent {
   boardService: BoardService = inject(BoardService)
 
-  boards: Signal<Board[]> = this.boardService.boards
+  selectedBoard$!: Observable<Board>
+  subscription!: Subscription
 
-  // board: Signal<Board | undefined> = computed(() => this.boards().find(board => board.name == this.boardService.selectedBoard().name))
+  ngOnInit() {
+    this.subscription = this.boardService.boards$.subscribe((boards) => {
+      this.boardService.updateSelectedBoard(boards[0])
+    })
 
-  board = this.boardService.selectedBoard
+    this.selectedBoard$ = this.boardService.selectedBoard$
+  }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe()
+  }
 }
