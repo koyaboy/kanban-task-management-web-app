@@ -1,6 +1,6 @@
 import { Component, inject, Output, EventEmitter } from '@angular/core';
 import { Board } from '../../../model/board';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { BoardService } from '../../../services/board.service';
 import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Column } from '../../../model/column';
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-edit-board',
   standalone: true,
-  imports: [NgFor, ReactiveFormsModule, FormsModule],
+  imports: [NgFor, NgIf, ReactiveFormsModule, FormsModule],
   templateUrl: './edit-board.component.html',
   styleUrl: './edit-board.component.css'
 })

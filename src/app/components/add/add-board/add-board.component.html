@@ -4,9 +4,17 @@
     <form [formGroup]="addBoardForm" class="flex flex-col gap-5 mt-5" (ngSubmit)="onSubmit()">
         <div class="flex flex-col gap-2">
             <label for="boardName" class="font-bold text-[0.75rem] text-medium-grey">Board Name</label>
-            <input formControlName="boardName" type="text" id="boardName"
-                class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 text-body-L text-black"
-                placeholder="e.g Web Design" />
+            <div class="relative w-full">
+                <input formControlName="boardName" type="text" id="boardName"
+                    class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black"
+                    placeholder="e.g Web Design" />
+
+                <span
+                    *ngIf="addBoardForm.get('boardName')?.hasError('required') && (addBoardForm.get('boardName')?.dirty|| addBoardForm.get('boardName')?.touched )"
+                    class="form-validation-error-message">
+                    Can't be empty
+                </span>
+            </div>
         </div>
 
         <fieldset formArrayName="boardColumns" class="flex flex-col gap-3">
@@ -14,8 +22,17 @@
 
             <div *ngFor="let columnGroup of boardColumns.controls; let i = index" [formGroupName]="i"
                 class="flex justify-between items-center gap-[0.6rem]">
-                <input formControlName="name" type="text"
-                    class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black" />
+
+                <div class="relative w-full">
+                    <input formControlName="name" type="text"
+                        class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black" />
+
+                    <span
+                        *ngIf="columnGroup.get('name')?.hasError('required') && (columnGroup.get('name')?.dirty|| columnGroup.get('name')?.touched )"
+                        class="form-validation-error-message">
+                        Can't be empty
+                    </span>
+                </div>
 
                 <button type="button" (click)="removeBoardColumn(i)">
                     <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg ">

@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Component, Output, inject, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, FormsModule, FormArray, FormGroup } from '@angular/forms';
 import { BoardService } from '../../../services/board.service';
@@ -7,7 +7,7 @@ import { Board } from '../../../model/board';
 @Component({
   selector: 'app-add-board',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, NgFor],
+  imports: [NgIf, ReactiveFormsModule, FormsModule, NgFor],
   templateUrl: './add-board.component.html',
   styleUrl: './add-board.component.css'
 })
