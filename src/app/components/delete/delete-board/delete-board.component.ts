@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Output, EventEmitter, inject } from '@angular/core';
 import { Board } from '../../../model/board';
 import { BoardService } from '../../../services/board.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-delete-board',
@@ -13,9 +14,42 @@ import { BoardService } from '../../../services/board.service';
 export class DeleteBoardComponent {
   boardService: BoardService = inject(BoardService)
 
-  @Input() board!: Board | undefined
+  @Output() updatedBoards: EventEmitter<Board[]> = new EventEmitter()
+
+  boards!: Board[]
+  selectedBoard!: Board
+  selectedBoardId!: string
+  sub!: Subscription
+  sub2!: Subscription
+
+  ngOnInit() {
+    this.sub = this.boardService.selectedBoard$.subscribe((selectedBoard) => {
+      this.selectedBoard = selectedBoard
+      this.selectedBoardId = selectedBoard._id
+    })
+
+    this.sub2 = this.boardService.boards$.subscribe((boards) => {
+      this.boards = boards
+    })
+  }
+
+  deleteBoard() {
+    this.boardService.deleteBoard(this.selectedBoardId).subscribe(() => {
+      this.updateBoards()
+    })
+  }
+
+  updateBoards() {
+    this.boardService.getBoards().subscribe((data) => {
+      this.updatedBoards.emit(data)
+    })
+  }
 
   closeDeleteBoardModal() {
     this.boardService.closeModal()
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe()
   }
 }

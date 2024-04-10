@@ -1,11 +1,12 @@
 <div class="bg-white p-6 rounded-md w-[90vw]" role="dialog">
     <h1 class="text-heading-L text-red">Delete this board?</h1>
 
-    <p class="mt-5 text-body-L text-medium-grey">Are you sure you want to delete the '{{board?.name}}' board? This
+    <p class="mt-5 text-body-L text-medium-grey">Are you sure you want to delete the '{{selectedBoard.name}}' board?
+        This
         action will remove all columns and tasks and cannot be reversed.</p>
 
     <div class="mt-5 flex flex-col gap-4 font-bold text-[0.813rem] leading-[1.438rem]">
-        <button class="bg-red text-white rounded-[1.25rem] py-2">Delete</button>
+        <button class="bg-red text-white rounded-[1.25rem] py-2" (click)="deleteBoard()">Delete</button>
         <button class="bg-[#635FC7] bg-opacity-10 text-purple rounded-[1.25rem] py-2"
             (click)="closeDeleteBoardModal()">Cancel</button>
     </div>

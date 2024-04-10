@@ -87,8 +87,8 @@ export class HeaderComponent {
   handleBoardsUpdate(newBoards: Board[]) {
     this.boards$ = this.boardService.boards$
     this.boards = newBoards
-    let newSelectedBoardIndex = this.boards[this.boards.length - 1]
-    this.boardService.updateSelectedBoard(newSelectedBoardIndex)
+    let newSelectedBoard = this.boards[this.boards.length - 1]
+    this.boardService.updateSelectedBoard(newSelectedBoard)
     this.boardService.closeModal()
   }
 }

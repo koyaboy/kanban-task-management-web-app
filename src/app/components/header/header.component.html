@@ -136,5 +136,5 @@
 </ng-template>
 
 <ng-template #deleteBoardRef>
-    <!-- <app-delete-board [board]="this.boardService.selectedBoard"></app-delete-board> -->
+    <app-delete-board (updatedBoards)="handleBoardsUpdate($event)"></app-delete-board>
 </ng-template>
