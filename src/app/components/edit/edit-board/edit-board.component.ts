@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Output, EventEmitter } from '@angular/core';
 import { Board } from '../../../model/board';
 import { NgFor } from '@angular/common';
 import { BoardService } from '../../../services/board.service';
 import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Column } from '../../../model/column';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-board',
@@ -16,15 +17,19 @@ export class EditBoardComponent {
   boardService: BoardService = inject(BoardService)
   fb: FormBuilder = inject(FormBuilder)
 
-  // @Output() updatedBoards: EventEmitter<Board[]> = new EventEmitter()
+  @Output() updatedBoards: EventEmitter<Board[]> = new EventEmitter()
+
   selectedBoardName!: string
   selectedBoardColumns!: Column[] | undefined
+  selectedBoardId!: string
   editBoardForm!: FormGroup
+  sub!: Subscription
 
   ngOnInit() {
-    this.boardService.selectedBoard$.subscribe((selectedBoard) => {
+    this.sub = this.boardService.selectedBoard$.subscribe((selectedBoard) => {
       this.selectedBoardName = selectedBoard.name
       this.selectedBoardColumns = selectedBoard.columns
+      this.selectedBoardId = selectedBoard._id
     })
 
     this.editBoardForm = this.fb.group({
@@ -49,20 +54,22 @@ export class EditBoardComponent {
     const { boardName, boardColumns } = this.editBoardForm.value
 
     const data = {
-      name: boardName,
-      columns: boardColumns
+      boardName: boardName,
+      boardColumns: boardColumns
     }
 
-    console.log(data)
-
-    // this.boardService.addBoard(data).subscribe(() => {
-    //   this.updateBoards()
-    // })
+    this.boardService.editBoard(data, this.selectedBoardId).subscribe(() => {
+      this.updateBoards()
+    })
   }
 
   updateBoards() {
-    // this.boardService.getBoards().subscribe((data) => {
-    //   this.updatedBoards.emit(data)
-    // })
+    this.boardService.getBoards().subscribe((data) => {
+      this.updatedBoards.emit(data)
+    })
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe()
   }
 }

@@ -132,7 +132,7 @@
 </ng-template>
 
 <ng-template #editBoardRef>
-    <app-edit-board></app-edit-board>
+    <app-edit-board (updatedBoards)="handleBoardsUpdate($event)"></app-edit-board>
 </ng-template>
 
 <ng-template #deleteBoardRef>

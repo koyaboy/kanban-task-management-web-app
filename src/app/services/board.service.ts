@@ -57,6 +57,10 @@ export class BoardService {
     return this.http.post(`${this.apiUrl}/createBoard`, { ...data })
   }
 
+  editBoard(data: object, selectedBoardId: string) {
+    return this.http.put(`${this.apiUrl}/editBoard/${selectedBoardId}`, { ...data })
+  }
+
   editTask(data: object, taskId: string, boardId: string, columnName: string) {
     return this.http.put(`${this.apiUrl}/editTask/${taskId}`, { data, selectedBoardId: boardId, columnName: columnName })
   }
