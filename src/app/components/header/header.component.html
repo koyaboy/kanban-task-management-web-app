@@ -129,11 +129,10 @@
 
 <ng-template #addBoardRef>
     <app-add-board (updatedBoards)="handleBoardsUpdate($event)"></app-add-board>
-    <!-- <app-add-board></app-add-board> -->
 </ng-template>
 
 <ng-template #editBoardRef>
-    <!-- <app-edit-board [board]="this.boardService.selectedBoard"></app-edit-board> -->
+    <app-edit-board></app-edit-board>
 </ng-template>
 
 <ng-template #deleteBoardRef>
