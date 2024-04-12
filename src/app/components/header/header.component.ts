@@ -85,8 +85,8 @@ export class HeaderComponent {
   }
 
   handleBoardsUpdate(newBoards: Board[]) {
-    this.boards$ = this.boardService.boards$
-    this.boards = newBoards
+    // this.boards$ = this.boardService.boards$
+    // this.boards = newBoards
     let newSelectedBoard = this.boards[this.boards.length - 1]
     this.boardService.updateSelectedBoard(newSelectedBoard)
     this.boardService.closeModal()

@@ -34,15 +34,13 @@ export class DeleteBoardComponent {
   }
 
   deleteBoard() {
-    this.boardService.deleteBoard(this.selectedBoardId).subscribe(() => {
-      this.updateBoards()
-    })
+    this.boardService.deleteBoard(this.selectedBoardId)
   }
 
   updateBoards() {
-    this.boardService.getBoards().subscribe((data) => {
-      this.updatedBoards.emit(data)
-    })
+    // this.boardService.getBoards().subscribe((data) => {
+    //   this.updatedBoards.emit(data)
+    // })
   }
 
   closeDeleteBoardModal() {

@@ -58,15 +58,13 @@ export class EditBoardComponent {
       boardColumns: boardColumns
     }
 
-    this.boardService.editBoard(data, this.selectedBoardId).subscribe(() => {
-      this.updateBoards()
-    })
+    this.boardService.editBoard(data, this.selectedBoardId)
   }
 
   updateBoards() {
-    this.boardService.getBoards().subscribe((data) => {
-      this.updatedBoards.emit(data)
-    })
+    // this.boardService.getBoards().subscribe((data) => {
+    //   this.updatedBoards.emit(data)
+    // })
   }
 
   ngOnDestroy() {

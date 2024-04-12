@@ -20,14 +20,14 @@ export class BoardComponent {
   subscription!: Subscription
 
   ngOnInit() {
-    this.subscription = this.boardService.boards$.subscribe((boards) => {
-      this.boardService.updateSelectedBoard(boards[0])
-    })
+    // this.subscription = this.boardService.boards$.subscribe((boards) => {
+    //   this.boardService.updateSelectedBoard(boards[0])
+    // })
 
     this.selectedBoard$ = this.boardService.selectedBoard$
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe()
+    // this.subscription.unsubscribe()
   }
 }

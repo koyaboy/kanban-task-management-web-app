@@ -15,8 +15,6 @@ export class AddBoardComponent {
   boardService: BoardService = inject(BoardService)
   fb: FormBuilder = inject(FormBuilder)
 
-  @Output() updatedBoards: EventEmitter<Board[]> = new EventEmitter()
-
   addBoardForm!: FormGroup
 
   ngOnInit() {
@@ -49,14 +47,6 @@ export class AddBoardComponent {
       columns: boardColumns
     }
 
-    this.boardService.addBoard(data).subscribe(() => {
-      this.updateBoards()
-    })
-  }
-
-  updateBoards() {
-    this.boardService.getBoards().subscribe((data) => {
-      this.updatedBoards.emit(data)
-    })
+    this.boardService.addBoard(data)
   }
 }

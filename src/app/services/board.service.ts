@@ -19,7 +19,10 @@ export class BoardService {
   overlay: Overlay = inject(Overlay)
   injector = inject(EnvironmentInjector);
 
-  boards$ = this.http.get<Board[]>(`${this.apiUrl}/getBoards`).pipe(shareReplay(1))
+  // boards$ = this.http.get<Board[]>(`${this.apiUrl}/getBoards`).pipe(shareReplay(1))
+
+  private boards = new BehaviorSubject<Board[]>([])
+  boards$ = this.boards.asObservable()
 
   private selectedBoard = new BehaviorSubject<Board>({ _id: '', name: '', columns: [] })
   selectedBoard$ = this.selectedBoard.asObservable()
@@ -45,8 +48,11 @@ export class BoardService {
   }
 
   getBoards() {
-    this.boards$ = this.http.get<Board[]>(`${this.apiUrl}/getBoards`).pipe(shareReplay(1))
-    return this.boards$
+    this.http.get<Board[]>(`${this.apiUrl}/getBoards`).pipe(shareReplay(1)).subscribe(
+      (boards) => {
+        this.boards.next(boards)
+        this.selectedBoard.next(boards[0])
+      })
   }
 
   updateSelectedBoard(newBoard: Board) {
@@ -54,15 +60,49 @@ export class BoardService {
   }
 
   addBoard(data: object) {
-    return this.http.post(`${this.apiUrl}/createBoard`, { ...data })
+    this.http.post<Board>(`${this.apiUrl}/createBoard`, { ...data }).subscribe(
+      (newBoard) => {
+        const currentBoard = this.boards.value;
+        const updatedBoards = [...currentBoard, newBoard]
+        this.boards.next(updatedBoards)
+        this.updateSelectedBoard(newBoard)
+        this.closeModal()
+      })
   }
 
   editBoard(data: object, selectedBoardId: string) {
-    return this.http.put(`${this.apiUrl}/editBoard/${selectedBoardId}`, { ...data })
+    this.http.put<Board>(`${this.apiUrl}/editBoard/${selectedBoardId}`, { ...data }).subscribe((editedBoard) => {
+      let currentBoards = this.boards.value
+      const index = currentBoards.findIndex(board => board._id === editedBoard._id);
+
+      if (index !== -1) {
+        currentBoards[index] = editedBoard
+      }
+
+      this.boards.next(currentBoards)
+      this.closeModal()
+    })
   }
 
   deleteBoard(selectedBoardId: string) {
-    return this.http.delete(`${this.apiUrl}/deleteBoard/${selectedBoardId}`)
+    this.http.delete<Board>(`${this.apiUrl}/deleteBoard/${selectedBoardId}`).subscribe((deletedBoard) => {
+      let currentBoards = this.boards.value
+
+      const boardToDeleteIndex = currentBoards.findIndex(board => board._id == deletedBoard._id)
+
+      if (boardToDeleteIndex !== -1) {
+        currentBoards.splice(boardToDeleteIndex, 1)
+      }
+
+      this.boards.next(currentBoards)
+
+      if (boardToDeleteIndex > 0) {
+        this.updateSelectedBoard(currentBoards[boardToDeleteIndex - 1])
+      } else {
+        this.updateSelectedBoard(currentBoards[0])
+      }
+      this.closeModal()
+    })
   }
 
   editTask(data: object, taskId: string, boardId: string, columnName: string) {
