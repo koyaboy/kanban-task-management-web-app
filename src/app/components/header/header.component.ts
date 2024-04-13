@@ -10,6 +10,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { AsyncPipe, NgFor, NgStyle, NgIf } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -30,9 +31,13 @@ export class HeaderComponent {
 
   boards$!: Observable<Board[]>
   selectedBoard$!: Observable<Board>
+  sub!: Subscription
+  sub2!: Subscription
+  sub3!: Subscription
 
   boards!: Board[]
   selectedBoard!: Board
+  isSideBarOpen!: boolean
 
   shouldOpenBoards: boolean = false
   shouldOpenEditandDeleteBoardsDropdown: boolean = false
@@ -41,12 +46,16 @@ export class HeaderComponent {
     this.boards$ = this.boardService.boards$
     this.selectedBoard$ = this.boardService.selectedBoard$
 
-    this.boardService.boards$.subscribe((boards) => {
+    this.sub = this.boardService.boards$.subscribe((boards) => {
       this.boards = boards
     })
 
-    this.boardService.selectedBoard$.subscribe((selectedBoard) => {
+    this.sub2 = this.boardService.selectedBoard$.subscribe((selectedBoard) => {
       this.selectedBoard = selectedBoard
+    })
+
+    this.sub3 = this.boardService.isSideBarOpen$.subscribe((isSideBarOpen) => {
+      this.isSideBarOpen = isSideBarOpen
     })
   }
   changeBoard(index: number) {
@@ -90,5 +99,11 @@ export class HeaderComponent {
     let newSelectedBoard = this.boards[this.boards.length - 1]
     this.boardService.updateSelectedBoard(newSelectedBoard)
     this.boardService.closeModal()
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe()
+    this.sub2.unsubscribe()
+    this.sub3.unsubscribe()
   }
 }

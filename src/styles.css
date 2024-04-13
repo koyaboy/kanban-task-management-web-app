@@ -19,3 +19,7 @@ body {
     line-height: '1.438rem';
     font-weight: '500';
 }
+
+::-webkit-scrollbar {
+    display: none;
+}

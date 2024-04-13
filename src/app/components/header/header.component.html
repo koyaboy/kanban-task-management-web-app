@@ -97,7 +97,8 @@
 
         <div class="hidden border-l-light-grey h-[80px] border md:block"></div>
 
-        <h1 class="hidden font-bold text-[1.25rem] md:block">{{selectedBoard.name}}</h1>
+        <h1 class="hidden font-bold text-[1.25rem] md:block" [ngStyle]="{'margin-left': isSideBarOpen ? '48px':''}">
+            {{selectedBoard.name}}</h1>
     </div>
 
     <div class="flex gap-4 items-center md:gap-6">

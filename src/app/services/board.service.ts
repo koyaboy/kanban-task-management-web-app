@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, Signal, EnvironmentInjector, runInInjectionContext } from '@angular/core';
+import { Injectable, inject, signal, Signal, EnvironmentInjector, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Board } from '../model/board';
 import { toSignal } from "@angular/core/rxjs-interop"
@@ -19,13 +19,14 @@ export class BoardService {
   overlay: Overlay = inject(Overlay)
   injector = inject(EnvironmentInjector);
 
-  // boards$ = this.http.get<Board[]>(`${this.apiUrl}/getBoards`).pipe(shareReplay(1))
-
   private boards = new BehaviorSubject<Board[]>([])
   boards$ = this.boards.asObservable()
 
   private selectedBoard = new BehaviorSubject<Board>({ _id: '', name: '', columns: [] })
   selectedBoard$ = this.selectedBoard.asObservable()
+
+  private isSideBarOpen = new BehaviorSubject<boolean>(true)
+  isSideBarOpen$ = this.isSideBarOpen.asObservable()
 
   config = new OverlayConfig({
     positionStrategy: this.overlay.position().global().centerVertically().centerHorizontally(),
@@ -111,5 +112,13 @@ export class BoardService {
 
   deleteTask(taskId: string, boardId: string, status: string) {
     return this.http.delete(`${this.apiUrl}/deleteTask/${taskId}/${boardId}/${status}`)
+  }
+
+  openSideBar() {
+    this.isSideBarOpen.next(true)
+  }
+
+  hideSideBar() {
+    this.isSideBarOpen.next(false)
   }
 }
