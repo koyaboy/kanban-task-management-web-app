@@ -1,4 +1,4 @@
-<div class="flex gap-5 overflow-scroll mt-6 px-4 pb-5">
+<div class="flex gap-5 overflow-scroll mt-6 px-4 pb-5 md:px-7">
     <article *ngFor="let column of (selectedBoard$|async)?.columns; let i = index">
         <div class="flex gap-2 mb-4 w-[17.5rem]">
             <div class="w-4 h-4 rounded-full" [ngStyle]="{ 'background-color': getRandomColor(i) }"></div>

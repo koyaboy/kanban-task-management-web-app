@@ -1,5 +1,5 @@
 <main>
-    <div *ngIf="(selectedBoard$ | async)?.columns?.length !== 0; else displayEmptyBoard" class="mx-3">
+    <div *ngIf="(selectedBoard$ | async)?.columns?.length !== 0; else displayEmptyBoard">
         <app-columns></app-columns>
     </div>
 
