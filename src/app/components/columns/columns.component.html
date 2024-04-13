@@ -18,10 +18,12 @@
         </div>
     </article>
 
-    <div class="w-[17.5rem] h-full bg-red justify-center items-center">
-        <button (click)="openEditBoardModal()">+ New Column</button>
+    <div class="hidden lg:flex w-[17.5rem] min-h-screen bg-[#E9EFFA] justify-center items-center px-4">
+        <button (click)="openEditBoardModal()" class="text-heading-XL text-medium-grey">+ New Column</button>
     </div>
 </div>
+
+
 
 <ng-template #viewTaskRef>
     <app-view-task [id]="taskId" [title]="taskTitle" [description]="taskDescription" [subtasks]="taskSubtasks"
