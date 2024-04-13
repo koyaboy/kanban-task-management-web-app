@@ -1,6 +1,5 @@
 import { AsyncPipe, NgFor, NgStyle } from '@angular/common';
-import { Component, Input, TemplateRef, ViewChild, inject, viewChild } from '@angular/core';
-import { Column } from '../../model/column';
+import { Component, Input, TemplateRef, ViewChild, inject } from '@angular/core';
 import { ViewTaskComponent } from '../view-task/view-task.component';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Subtask } from '../../model/subtask';
@@ -9,17 +8,21 @@ import { ViewContainerRef } from '@angular/core';
 import { Task } from '../../model/task';
 import { Observable } from 'rxjs';
 import { Board } from '../../model/board';
+import { EditBoardComponent } from '../edit/edit-board/edit-board.component';
 
 @Component({
   selector: 'app-columns',
   standalone: true,
-  imports: [NgFor, NgStyle, ViewTaskComponent, AsyncPipe],
+  imports: [NgFor, NgStyle, ViewTaskComponent, AsyncPipe, EditBoardComponent],
   templateUrl: './columns.component.html',
   styleUrl: './columns.component.css'
 })
 export class ColumnsComponent {
   boardService: BoardService = inject(BoardService)
   viewContainerRef: ViewContainerRef = inject(ViewContainerRef)
+
+  @ViewChild("viewTaskRef") viewTaskRef!: TemplateRef<any>
+  @ViewChild("editBoardRef") editBoardRef!: TemplateRef<any>
 
   selectedBoard$!: Observable<Board>
 
@@ -30,7 +33,6 @@ export class ColumnsComponent {
   taskStatus!: string
   completedSubtasks!: number
 
-  @ViewChild("viewTaskRef") viewTaskRef!: TemplateRef<any>
 
   ngOnInit() {
     this.selectedBoard$ = this.boardService.selectedBoard$
@@ -53,5 +55,10 @@ export class ColumnsComponent {
 
     const viewTaskPortal = new TemplatePortal(this.viewTaskRef, this.viewContainerRef)
     this.boardService.openModal(viewTaskPortal)
+  }
+
+  openEditBoardModal() {
+    const editBoardPortal = new TemplatePortal(this.editBoardRef, this.viewContainerRef)
+    this.boardService.openModal(editBoardPortal)
   }
 }
