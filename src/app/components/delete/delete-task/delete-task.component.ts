@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  inject,
+} from '@angular/core';
 import { BoardService } from '../../../services/board.service';
 import { Column } from '../../../model/column';
 import { Board } from '../../../model/board';
@@ -9,38 +14,34 @@ import { Board } from '../../../model/board';
   imports: [],
   templateUrl: './delete-task.component.html',
   styleUrl: './delete-task.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteTaskComponent {
-  boardService: BoardService = inject(BoardService)
+  boardService: BoardService = inject(BoardService);
 
-  @Input() taskId!: string
-  @Input() title!: string
-  @Input() taskStatus!: string
+  @Input() taskId!: string;
+  @Input() title!: string;
+  @Input() taskStatus!: string;
 
-  selectedBoard!: Board
+  selectedBoard!: Board;
 
   ngOnInit() {
     this.boardService.selectedBoard$.subscribe((selectedBoard) => {
-      this.selectedBoard = selectedBoard
-    })
+      this.selectedBoard = selectedBoard;
+    });
   }
 
   deleteTask() {
-    this.boardService.deleteTask(this.taskId, this.selectedBoard._id, this.taskStatus).subscribe()
+    this.boardService.deleteTask(
+      this.taskId,
+      this.selectedBoard._id,
+      this.taskStatus
+    );
 
-    //Optimistically update UI
-    let column!: Column
-
-    if (this.selectedBoard.columns) column = this.selectedBoard.columns.find(column => column.name == this.taskStatus) as Column
-    let taskIndex = column.tasks?.findIndex(task => task._id == this.taskId)
-
-    if (taskIndex) column.tasks?.splice(taskIndex, 1)
-
-    this.boardService.closeModal()
+    this.boardService.closeModal();
   }
 
   closeDeleteTaskModal() {
-    this.boardService.closeModal()
+    this.boardService.closeModal();
   }
 }

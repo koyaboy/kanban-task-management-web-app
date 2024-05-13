@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject, Signal, computed, ViewChild, ViewContainerRef, TemplateRef, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Signal,
+  computed,
+  ViewChild,
+  ViewContainerRef,
+  TemplateRef,
+  signal,
+} from '@angular/core';
 import { BoardService } from '../../services/board.service';
 import { Board } from '../../model/board';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -8,102 +18,122 @@ import { EditBoardComponent } from '../edit/edit-board/edit-board.component';
 import { DeleteBoardComponent } from '../delete/delete-board/delete-board.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { AsyncPipe, NgFor, NgStyle, NgIf } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [AddTaskComponent, AddBoardComponent, EditBoardComponent, DeleteBoardComponent, OverlayModule, NgFor, NgStyle, NgIf, AsyncPipe],
+  imports: [
+    AddTaskComponent,
+    AddBoardComponent,
+    EditBoardComponent,
+    DeleteBoardComponent,
+    OverlayModule,
+    NgFor,
+    NgStyle,
+    NgIf,
+    AsyncPipe,
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent {
-  boardService: BoardService = inject(BoardService)
-  viewContainerRef: ViewContainerRef = inject(ViewContainerRef)
+  boardService: BoardService = inject(BoardService);
+  viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
-  @ViewChild("addTaskRef") addTaskRef!: TemplateRef<any>
-  @ViewChild("addBoardRef") addBoardRef!: TemplateRef<any>
-  @ViewChild("editBoardRef") editBoardRef!: TemplateRef<any>
-  @ViewChild("deleteBoardRef") deleteBoardRef!: TemplateRef<any>
+  @ViewChild('addTaskRef') addTaskRef!: TemplateRef<any>;
+  @ViewChild('addBoardRef') addBoardRef!: TemplateRef<any>;
+  @ViewChild('editBoardRef') editBoardRef!: TemplateRef<any>;
+  @ViewChild('deleteBoardRef') deleteBoardRef!: TemplateRef<any>;
 
-  boards$!: Observable<Board[]>
-  selectedBoard$!: Observable<Board>
-  sub!: Subscription
-  sub2!: Subscription
-  sub3!: Subscription
+  boards$!: Observable<Board[]>;
+  selectedBoard$!: Observable<Board>;
+  sub!: Subscription;
+  sub2!: Subscription;
+  sub3!: Subscription;
 
-  boards!: Board[]
-  selectedBoard!: Board
-  isSideBarOpen!: boolean
+  boards!: Board[];
+  selectedBoard!: Board;
+  isSideBarOpen!: boolean;
 
-  shouldOpenBoards: boolean = false
-  shouldOpenEditandDeleteBoardsDropdown: boolean = false
+  shouldOpenBoards: boolean = false;
+  shouldOpenEditandDeleteBoardsDropdown: boolean = false;
 
   ngOnInit() {
-    this.boards$ = this.boardService.boards$
-    this.selectedBoard$ = this.boardService.selectedBoard$
+    this.boards$ = this.boardService.boards$;
+    this.selectedBoard$ = this.boardService.selectedBoard$;
 
     this.sub = this.boardService.boards$.subscribe((boards) => {
-      this.boards = boards
-    })
+      this.boards = boards;
+    });
 
     this.sub2 = this.boardService.selectedBoard$.subscribe((selectedBoard) => {
-      this.selectedBoard = selectedBoard
-    })
+      this.selectedBoard = selectedBoard;
+    });
 
     this.sub3 = this.boardService.isSideBarOpen$.subscribe((isSideBarOpen) => {
-      this.isSideBarOpen = isSideBarOpen
-    })
+      this.isSideBarOpen = isSideBarOpen;
+    });
   }
   changeBoard(index: number) {
     this.boardService.boards$.subscribe((boards) => {
-      this.boardService.updateSelectedBoard(boards[index])
-    })
+      this.boardService.updateSelectedBoard(boards[index]);
+    });
 
-    this.shouldOpenBoards = false
+    this.shouldOpenBoards = false;
   }
 
   openAddTaskModal() {
-    const addTaskPortal = new TemplatePortal(this.addTaskRef, this.viewContainerRef)
-    this.boardService.openModal(addTaskPortal)
-
+    const addTaskPortal = new TemplatePortal(
+      this.addTaskRef,
+      this.viewContainerRef
+    );
+    this.boardService.openModal(addTaskPortal);
   }
 
   openAddBoardModal(): void {
-    this.shouldOpenBoards = false
+    this.shouldOpenBoards = false;
 
-    const addBoardPortal = new TemplatePortal(this.addBoardRef, this.viewContainerRef)
-    this.boardService.openModal(addBoardPortal)
+    const addBoardPortal = new TemplatePortal(
+      this.addBoardRef,
+      this.viewContainerRef
+    );
+    this.boardService.openModal(addBoardPortal);
   }
 
   openEditBoardModal(): void {
-    this.shouldOpenEditandDeleteBoardsDropdown = false
+    this.shouldOpenEditandDeleteBoardsDropdown = false;
 
-    const editBoardPortal = new TemplatePortal(this.editBoardRef, this.viewContainerRef)
-    this.boardService.openModal(editBoardPortal)
+    const editBoardPortal = new TemplatePortal(
+      this.editBoardRef,
+      this.viewContainerRef
+    );
+    this.boardService.openModal(editBoardPortal);
   }
 
   openDeleteBoardModal(): void {
-    this.shouldOpenEditandDeleteBoardsDropdown = false
+    this.shouldOpenEditandDeleteBoardsDropdown = false;
 
-    const deleteBoardPortal = new TemplatePortal(this.deleteBoardRef, this.viewContainerRef)
-    this.boardService.openModal(deleteBoardPortal)
+    const deleteBoardPortal = new TemplatePortal(
+      this.deleteBoardRef,
+      this.viewContainerRef
+    );
+    this.boardService.openModal(deleteBoardPortal);
   }
 
   handleBoardsUpdate(newBoards: Board[]) {
     // this.boards$ = this.boardService.boards$
     // this.boards = newBoards
-    let newSelectedBoard = this.boards[this.boards.length - 1]
-    this.boardService.updateSelectedBoard(newSelectedBoard)
-    this.boardService.closeModal()
+    let newSelectedBoard = this.boards[this.boards.length - 1];
+    this.boardService.updateSelectedBoard(newSelectedBoard);
+    this.boardService.closeModal();
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe()
-    this.sub2.unsubscribe()
-    this.sub3.unsubscribe()
+    this.sub.unsubscribe();
+    this.sub2.unsubscribe();
+    this.sub3.unsubscribe();
   }
 }
