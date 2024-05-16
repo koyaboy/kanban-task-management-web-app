@@ -15,6 +15,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { Task } from '../model/task';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Column } from '../model/column';
+import { updateTaskOrderDTO } from '../model/updateTaskOrderDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -226,17 +227,14 @@ export class BoardService {
     this.isSideBarOpen.next(false);
   }
 
-  updateTaskOrder(
-    previousIndex: number,
-    currentIndex: number,
-    columnName: string,
-    selectedBoardId: string
-  ) {
+  updateTaskOrder(data: updateTaskOrderDTO) {
     return this.http.post(`${this.apiUrl}/updateTaskOrder`, {
-      previousIndex,
-      currentIndex,
-      columnName,
-      selectedBoardId,
+      previousIndex: data.previousIndex,
+      currentIndex: data.currentIndex,
+      previousColumnName: data.previousColumnName,
+      currentColumnName: data.currentColumnName,
+      columnName: data.columnName,
+      selectedBoardId: data.selectedBoardId,
     });
   }
 }

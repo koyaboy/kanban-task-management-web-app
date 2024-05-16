@@ -82,14 +82,15 @@ export class ColumnsComponent {
         event.previousIndex,
         event.currentIndex
       );
-      this.boardService
-        .updateTaskOrder(
-          event.previousIndex,
-          event.currentIndex,
-          columnName,
-          this.selectedBoard._id
-        )
-        .subscribe();
+      const data = {
+        previousIndex: event.previousIndex,
+        currentIndex: event.currentIndex,
+        previousColumnName: '',
+        currentColumnName: '',
+        columnName: columnName,
+        selectedBoardId: this.selectedBoard._id,
+      };
+      this.boardService.updateTaskOrder(data).subscribe();
     } else {
       transferArrayItem(
         event.previousContainer.data,
@@ -98,7 +99,38 @@ export class ColumnsComponent {
         event.currentIndex
       );
 
-      // console.log(event.container);
+      const previousContainerId = event.previousContainer.id;
+      const matchPrev = previousContainerId.match(/\d+$/);
+      const previousColumnIndex = matchPrev ? matchPrev[0] : null;
+
+      const currentContainerId = event.container.id;
+      const matchCurr = currentContainerId.match(/\d+$/);
+      const currentColumnIndex = matchCurr ? matchCurr[0] : null;
+
+      if (
+        previousColumnIndex &&
+        currentColumnIndex &&
+        this.selectedBoard.columns
+      ) {
+        const prevColumn =
+          this.selectedBoard.columns[Number(previousColumnIndex)];
+        const prevColumnName = prevColumn.name;
+
+        const currentColumn =
+          this.selectedBoard.columns[Number(currentColumnIndex)];
+        const currentColumnName = currentColumn.name;
+
+        const data = {
+          previousIndex: event.previousIndex,
+          currentIndex: event.currentIndex,
+          previousColumnName: prevColumnName,
+          currentColumnName: currentColumnName,
+          columnName: '',
+          selectedBoardId: this.selectedBoard._id,
+        };
+
+        this.boardService.updateTaskOrder(data).subscribe();
+      }
     }
   }
 
