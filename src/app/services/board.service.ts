@@ -225,4 +225,18 @@ export class BoardService {
   hideSideBar() {
     this.isSideBarOpen.next(false);
   }
+
+  updateTaskOrder(
+    previousIndex: number,
+    currentIndex: number,
+    columnName: string,
+    selectedBoardId: string
+  ) {
+    return this.http.post(`${this.apiUrl}/updateTaskOrder`, {
+      previousIndex,
+      currentIndex,
+      columnName,
+      selectedBoardId,
+    });
+  }
 }

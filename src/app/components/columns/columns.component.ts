@@ -76,17 +76,20 @@ export class ColumnsComponent {
   }
 
   drop(event: CdkDragDrop<Task[]>, columnName: string) {
-    // let selectedColumn = this.selectedBoard?.columns?.find(
-    //   (column) => column.name == columnName
-    // );
-    // let tasksArray = selectedColumn?.tasks as Task[];
-
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
+      this.boardService
+        .updateTaskOrder(
+          event.previousIndex,
+          event.currentIndex,
+          columnName,
+          this.selectedBoard._id
+        )
+        .subscribe();
     } else {
       transferArrayItem(
         event.previousContainer.data,
@@ -94,6 +97,8 @@ export class ColumnsComponent {
         event.previousIndex,
         event.currentIndex
       );
+
+      // console.log(event.container);
     }
   }
 
