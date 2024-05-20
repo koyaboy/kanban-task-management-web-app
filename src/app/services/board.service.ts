@@ -1,8 +1,6 @@
 import {
   Injectable,
   inject,
-  signal,
-  Signal,
   EnvironmentInjector,
   HostListener,
 } from '@angular/core';
@@ -45,6 +43,8 @@ export class BoardService {
 
   private errorMessage = new BehaviorSubject<string>('');
   errorMessage$ = this.errorMessage.asObservable();
+
+  // private theme = new BehaviorSubject<string>(localStorage.getItem('theme') || 'light');
 
   config = new OverlayConfig({
     positionStrategy: this.overlay
@@ -275,5 +275,10 @@ export class BoardService {
       columnName: data.columnName,
       selectedBoardId: data.selectedBoardId,
     });
+  }
+
+  setTheme(selectedTheme: string) {
+    // localStorage.setItem('theme',selectedTheme)
+    // this.theme.next(selectedTheme);
   }
 }

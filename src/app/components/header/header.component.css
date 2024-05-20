@@ -1,4 +1,4 @@
-.checkbox-container {
+/* .checkbox-container {
     background-color: #635FC7;
     width: 2.5rem;
     height: 1.25rem;
@@ -27,4 +27,4 @@ input[type="checkbox"] {
 input[type="checkbox"]:checked,
 input[type="checkbox"]:checked+.custom-checkbox {
     transform: translateX(120%);
-}
+} */

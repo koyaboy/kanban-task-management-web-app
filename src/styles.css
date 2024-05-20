@@ -23,3 +23,35 @@ body {
 ::-webkit-scrollbar {
   display: none;
 }
+
+.checkbox-container {
+  background-color: #635fc7;
+  width: 2.5rem;
+  height: 1.25rem;
+  border-radius: 12px;
+  position: relative;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+input[type="checkbox"] {
+  opacity: 0;
+  position: absolute;
+  z-index: 999;
+  left: 3px;
+  height: 100%;
+  cursor: pointer;
+}
+
+.custom-checkbox {
+  background-color: white;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 9999px;
+}
+
+input[type="checkbox"]:checked,
+input[type="checkbox"]:checked + .custom-checkbox {
+  transform: translateX(120%);
+}

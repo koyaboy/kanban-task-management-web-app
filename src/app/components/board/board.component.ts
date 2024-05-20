@@ -1,4 +1,13 @@
-import { Component, inject, ViewChild, ViewContainerRef, TemplateRef, HostListener } from '@angular/core';
+import {
+  Component,
+  inject,
+  ViewChild,
+  ViewContainerRef,
+  TemplateRef,
+  Renderer2,
+  ElementRef,
+  HostListener,
+} from '@angular/core';
 import { ColumnsComponent } from '../columns/columns.component';
 import { BoardService } from '../../services/board.service';
 import { Board } from '../../model/board';
@@ -15,62 +24,91 @@ import { NgFor } from '@angular/common';
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [ColumnsComponent, NgIf, AsyncPipe, EditBoardComponent, NgStyle, AddBoardComponent, NgFor],
+  imports: [
+    ColumnsComponent,
+    NgIf,
+    AsyncPipe,
+    EditBoardComponent,
+    NgStyle,
+    AddBoardComponent,
+    NgFor,
+  ],
   templateUrl: './board.component.html',
-  styleUrl: './board.component.css'
+  styleUrl: './board.component.css',
 })
 export class BoardComponent {
-  boardService: BoardService = inject(BoardService)
-  viewContainerRef: ViewContainerRef = inject(ViewContainerRef)
+  boardService: BoardService = inject(BoardService);
+  viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+  renderer: Renderer2 = inject(Renderer2);
 
-  @ViewChild("addBoardRef") addBoardRef!: TemplateRef<any>
-  @ViewChild("editBoardRef") editBoardRef!: TemplateRef<any>
+  @ViewChild('addBoardRef') addBoardRef!: TemplateRef<any>;
+  @ViewChild('editBoardRef') editBoardRef!: TemplateRef<any>;
+  @ViewChild('checkbox') checkbox!: ElementRef<HTMLInputElement>;
 
-  boards$!: Observable<Board[]>
-  selectedBoard$!: Observable<Board>
-  subscription!: Subscription
+  boards$!: Observable<Board[]>;
+  selectedBoard$!: Observable<Board>;
+  subscription!: Subscription;
 
-  isSideBarOpen!: boolean
-  windowWidth!: number
-
+  isSideBarOpen!: boolean;
+  windowWidth!: number;
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
     this.windowWidth = window.innerWidth;
 
     if (this.windowWidth < 768) {
-      this.boardService.hideSideBar()
+      this.boardService.hideSideBar();
     }
   }
 
   ngOnInit() {
-    this.boards$ = this.boardService.boards$
-    this.selectedBoard$ = this.boardService.selectedBoard$
+    this.boards$ = this.boardService.boards$;
+    this.selectedBoard$ = this.boardService.selectedBoard$;
 
-    this.subscription = this.boardService.isSideBarOpen$.subscribe((isSideBarOpen) => {
-      this.isSideBarOpen = isSideBarOpen
-    })
+    this.subscription = this.boardService.isSideBarOpen$.subscribe(
+      (isSideBarOpen) => {
+        this.isSideBarOpen = isSideBarOpen;
+      }
+    );
 
-    this.windowWidth = window.innerWidth
+    this.windowWidth = window.innerWidth;
   }
 
   openEditBoardModal() {
-    const editBoardPortal = new TemplatePortal(this.editBoardRef, this.viewContainerRef)
-    this.boardService.openModal(editBoardPortal)
+    const editBoardPortal = new TemplatePortal(
+      this.editBoardRef,
+      this.viewContainerRef
+    );
+    this.boardService.openModal(editBoardPortal);
   }
 
   changeBoard(index: number) {
     this.boardService.boards$.subscribe((boards) => {
-      this.boardService.updateSelectedBoard(boards[index])
-    })
+      this.boardService.updateSelectedBoard(boards[index]);
+    });
   }
 
   openAddBoardModal(): void {
-    const addBoardPortal = new TemplatePortal(this.addBoardRef, this.viewContainerRef)
-    this.boardService.openModal(addBoardPortal)
+    const addBoardPortal = new TemplatePortal(
+      this.addBoardRef,
+      this.viewContainerRef
+    );
+    this.boardService.openModal(addBoardPortal);
+  }
+
+  toggleTheme() {
+    const htmlTag = document.querySelector('html');
+    const isCheckboxChecked = this.checkbox.nativeElement.checked;
+    if (isCheckboxChecked) {
+      this.renderer?.addClass(htmlTag, 'dark');
+      this.boardService.setTheme('dark');
+    } else {
+      this.renderer?.removeClass(htmlTag, 'dark');
+      this.boardService.setTheme('light');
+    }
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe()
+    this.subscription.unsubscribe();
   }
 }
