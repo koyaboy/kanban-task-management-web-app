@@ -6,7 +6,7 @@ import {
   EnvironmentInjector,
   HostListener,
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Board } from '../model/board';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { shareReplay, finalize } from 'rxjs/operators';
@@ -43,6 +43,9 @@ export class BoardService {
   private isSubmitting = new BehaviorSubject<boolean>(false);
   isSubmitting$ = this.isSubmitting.asObservable();
 
+  private errorMessage = new BehaviorSubject<string>('');
+  errorMessage$ = this.errorMessage.asObservable();
+
   config = new OverlayConfig({
     positionStrategy: this.overlay
       .position()
@@ -56,7 +59,10 @@ export class BoardService {
 
   openModal(portal: TemplatePortal<any>): void {
     this.overlayRef.attach(portal);
-    this.overlayRef.backdropClick().subscribe(() => this.closeModal());
+    this.overlayRef.backdropClick().subscribe(() => {
+      this.closeModal();
+      this.errorMessage.next('');
+    });
   }
 
   closeModal(): void {
@@ -114,12 +120,18 @@ export class BoardService {
           this.isSubmitting.next(false);
         })
       )
-      .subscribe((newBoard) => {
-        const currentBoard = this.boards.value;
-        const updatedBoards = [...currentBoard, newBoard];
-        this.boards.next(updatedBoards);
-        this.updateSelectedBoard(newBoard);
-        this.closeModal();
+      .subscribe({
+        next: (newBoard) => {
+          const currentBoard = this.boards.value;
+          const updatedBoards = [...currentBoard, newBoard];
+          this.boards.next(updatedBoards);
+          this.updateSelectedBoard(newBoard);
+          this.closeModal();
+          this.errorMessage.next('');
+        },
+        error: (errResp: HttpErrorResponse) => {
+          this.errorMessage.next(errResp.error.error);
+        },
       });
   }
 
@@ -132,18 +144,24 @@ export class BoardService {
           this.isSubmitting.next(false);
         })
       )
-      .subscribe((editedBoard) => {
-        let currentBoards = this.boards.value;
-        const index = currentBoards.findIndex(
-          (board) => board._id === editedBoard._id
-        );
+      .subscribe({
+        next: (editedBoard) => {
+          let currentBoards = this.boards.value;
+          const index = currentBoards.findIndex(
+            (board) => board._id === editedBoard._id
+          );
 
-        if (index !== -1) {
-          currentBoards[index] = editedBoard;
-        }
+          if (index !== -1) {
+            currentBoards[index] = editedBoard;
+          }
 
-        this.boards.next(currentBoards);
-        this.closeModal();
+          this.boards.next(currentBoards);
+          this.closeModal();
+          this.errorMessage.next('');
+        },
+        error: (errResp: HttpErrorResponse) => {
+          this.errorMessage.next(errResp.error.error);
+        },
       });
   }
 

@@ -1,4 +1,4 @@
-<div role="dialog" class="bg-white rounded-md p-6 w-[90vw]">
+<div role="dialog" class="bg-white rounded-md p-6 w-[90vw] pb-7">
   <h1 class="text-heading-L text-black">Edit Board</h1>
 
   <form
@@ -79,14 +79,22 @@
       </button>
     </fieldset>
 
-    <button
-      [disabled]="this.editBoardForm.invalid"
-      class="bg-purple py-2 text-white rounded-[1.25rem] font-bold text-[0.813rem] leading-[1.438rem] w-full disabled:opacity-50"
-    >
-      <div class="flex justify-center">
-        <span *ngIf="!(isSubmitting$ | async)">Edit Board</span>
-        <app-loader *ngIf="isSubmitting$ | async"></app-loader>
-      </div>
-    </button>
+    <div class="relative">
+      <button
+        [disabled]="this.editBoardForm.invalid"
+        class="bg-purple py-2 text-white rounded-[1.25rem] font-bold text-[0.813rem] leading-[1.438rem] w-full disabled:opacity-50"
+      >
+        <div class="flex justify-center">
+          <span *ngIf="!(isSubmitting$ | async)">Edit Board</span>
+          <app-loader *ngIf="isSubmitting$ | async"></app-loader>
+        </div>
+      </button>
+
+      <span
+        *ngIf="(errorMessage$ | async) !== ''"
+        class="text-[#ea5555] text-[0.9375rem] font-medium absolute -bottom-8 left-[50%] -translate-x-[50%] mb-2"
+        >{{ errorMessage$ | async }}</span
+      >
+    </div>
   </form>
 </div>

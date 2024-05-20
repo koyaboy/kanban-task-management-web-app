@@ -43,6 +43,7 @@ export class EditBoardComponent {
   sub!: Subscription;
 
   isSubmitting$ = this.boardService.isSubmitting$;
+  errorMessage$ = this.boardService.errorMessage$;
 
   ngOnInit() {
     this.sub = this.boardService.selectedBoard$.subscribe((selectedBoard) => {

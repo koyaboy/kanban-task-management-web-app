@@ -34,6 +34,7 @@ export class AddBoardComponent {
   addBoardForm!: FormGroup;
 
   isSubmitting$ = this.boardService.isSubmitting$;
+  errorMessage$ = this.boardService.errorMessage$;
 
   ngOnInit() {
     this.addBoardForm = this.fb.group({
