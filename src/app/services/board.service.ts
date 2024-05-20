@@ -9,7 +9,7 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { Board } from '../model/board';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { shareReplay, switchMap, tap } from 'rxjs/operators';
+import { shareReplay, finalize } from 'rxjs/operators';
 import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Task } from '../model/task';
@@ -39,6 +39,9 @@ export class BoardService {
 
   private isSideBarOpen = new BehaviorSubject<boolean>(true);
   isSideBarOpen$ = this.isSideBarOpen.asObservable();
+
+  private isSubmitting = new BehaviorSubject<boolean>(false);
+  isSubmitting$ = this.isSubmitting.asObservable();
 
   config = new OverlayConfig({
     positionStrategy: this.overlay
@@ -103,8 +106,14 @@ export class BoardService {
   }
 
   addBoard(data: object) {
+    this.isSubmitting.next(true);
     this.http
       .post<Board>(`${this.apiUrl}/createBoard`, { ...data })
+      .pipe(
+        finalize(() => {
+          this.isSubmitting.next(false);
+        })
+      )
       .subscribe((newBoard) => {
         const currentBoard = this.boards.value;
         const updatedBoards = [...currentBoard, newBoard];
@@ -115,8 +124,14 @@ export class BoardService {
   }
 
   editBoard(data: object, selectedBoardId: string) {
+    this.isSubmitting.next(true);
     this.http
       .put<Board>(`${this.apiUrl}/editBoard/${selectedBoardId}`, { ...data })
+      .pipe(
+        finalize(() => {
+          this.isSubmitting.next(false);
+        })
+      )
       .subscribe((editedBoard) => {
         let currentBoards = this.boards.value;
         const index = currentBoards.findIndex(
@@ -133,8 +148,14 @@ export class BoardService {
   }
 
   deleteBoard(selectedBoardId: string) {
+    this.isSubmitting.next(true);
     this.http
       .delete<Board>(`${this.apiUrl}/deleteBoard/${selectedBoardId}`)
+      .pipe(
+        finalize(() => {
+          this.isSubmitting.next(false);
+        })
+      )
       .subscribe((deletedBoard) => {
         let currentBoards = this.boards.value;
 

@@ -1,58 +1,93 @@
 <div role="dialog" class="bg-white rounded-md p-6 w-[90vw]">
-    <h1 class="text-heading-L text-black">Add New Board</h1>
+  <h1 class="text-heading-L text-black">Add New Board</h1>
 
-    <form [formGroup]="addBoardForm" class="flex flex-col gap-5 mt-5" (ngSubmit)="onSubmit()">
-        <div class="flex flex-col gap-2">
-            <label for="boardName" class="font-bold text-[0.75rem] text-medium-grey">Board Name</label>
-            <div class="relative w-full">
-                <input formControlName="boardName" type="text" id="boardName"
-                    class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black"
-                    placeholder="e.g Web Design" />
+  <form
+    [formGroup]="addBoardForm"
+    class="flex flex-col gap-5 mt-5"
+    (ngSubmit)="onSubmit()"
+  >
+    <div class="flex flex-col gap-2">
+      <label for="boardName" class="font-bold text-[0.75rem] text-medium-grey"
+        >Board Name</label
+      >
+      <div class="relative w-full">
+        <input
+          formControlName="boardName"
+          type="text"
+          id="boardName"
+          class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black"
+          placeholder="e.g Web Design"
+        />
 
-                <span
-                    *ngIf="addBoardForm.get('boardName')?.hasError('required') && (addBoardForm.get('boardName')?.dirty|| addBoardForm.get('boardName')?.touched )"
-                    class="form-validation-error-message">
-                    Can't be empty
-                </span>
-            </div>
+        <span
+          *ngIf="
+            addBoardForm.get('boardName')?.hasError('required') &&
+            (addBoardForm.get('boardName')?.dirty ||
+              addBoardForm.get('boardName')?.touched)
+          "
+          class="form-validation-error-message"
+        >
+          Can't be empty
+        </span>
+      </div>
+    </div>
+
+    <fieldset formArrayName="boardColumns" class="flex flex-col gap-3">
+      <legend class="font-bold text-[0.75rem] text-medium-grey mb-2">
+        Board Columns
+      </legend>
+
+      <div
+        *ngFor="let columnGroup of boardColumns.controls; let i = index"
+        [formGroupName]="i"
+        class="flex justify-between items-center gap-[0.6rem]"
+      >
+        <div class="relative w-full">
+          <input
+            formControlName="name"
+            type="text"
+            class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black"
+          />
+
+          <span
+            *ngIf="
+              columnGroup.get('name')?.hasError('required') &&
+              (columnGroup.get('name')?.dirty ||
+                columnGroup.get('name')?.touched)
+            "
+            class="form-validation-error-message"
+          >
+            Can't be empty
+          </span>
         </div>
 
-        <fieldset formArrayName="boardColumns" class="flex flex-col gap-3">
-            <legend class="font-bold text-[0.75rem] text-medium-grey mb-2">Board Columns</legend>
+        <button type="button" (click)="removeBoardColumn(i)">
+          <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg ">
+            <g fill="#828FA3" fill-rule="evenodd">
+              <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
+              <path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" />
+            </g>
+          </svg>
+        </button>
+      </div>
 
-            <div *ngFor="let columnGroup of boardColumns.controls; let i = index" [formGroupName]="i"
-                class="flex justify-between items-center gap-[0.6rem]">
+      <button
+        type="button"
+        (click)="addBoardColumn()"
+        class="bg-[#635FC7] bg-opacity-10 rounded-[1.25rem] py-2 text-purple font-bold text-[0.813rem] leading-[1.438rem]"
+      >
+        + Add New Column
+      </button>
+    </fieldset>
 
-                <div class="relative w-full">
-                    <input formControlName="name" type="text"
-                        class="rounded-[0.25rem] border border-[#828FA3] border-opacity-25 p-2 w-full text-body-L text-black" />
-
-                    <span
-                        *ngIf="columnGroup.get('name')?.hasError('required') && (columnGroup.get('name')?.dirty|| columnGroup.get('name')?.touched )"
-                        class="form-validation-error-message">
-                        Can't be empty
-                    </span>
-                </div>
-
-                <button type="button" (click)="removeBoardColumn(i)">
-                    <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg ">
-                        <g fill="#828FA3" fill-rule="evenodd">
-                            <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
-                            <path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" />
-                        </g>
-                    </svg>
-                </button>
-            </div>
-
-            <button type="button" (click)="addBoardColumn()"
-                class="bg-[#635FC7] bg-opacity-10 rounded-[1.25rem] py-2 text-purple font-bold text-[0.813rem] leading-[1.438rem]">+
-                Add New Column</button>
-        </fieldset>
-
-        <button [disabled]="this.addBoardForm.invalid"
-            class="bg-purple py-2 text-white rounded-[1.25rem] font-bold text-[0.813rem] leading-[1.438rem] w-full disabled:opacity-50">Create
-            New
-            Board</button>
-    </form>
-
+    <button
+      [disabled]="this.addBoardForm.invalid"
+      class="bg-purple py-2 text-white rounded-[1.25rem] font-bold text-[0.813rem] leading-[1.438rem] w-full disabled:opacity-50"
+    >
+      <div class="flex justify-center">
+        <span *ngIf="!(isSubmitting$ | async)">Create New Board</span>
+        <app-loader *ngIf="isSubmitting$ | async"></app-loader>
+      </div>
+    </button>
+  </form>
 </div>
