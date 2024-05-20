@@ -58,6 +58,13 @@
           >
             Can't be empty
           </span>
+
+          <span
+            *ngIf="boardColumns?.errors?.['duplicateNames']"
+            class="form-validation-error-message"
+          >
+            Duplicate column names are not allowed
+          </span>
         </div>
 
         <button type="button" (click)="removeBoardColumn(i)">

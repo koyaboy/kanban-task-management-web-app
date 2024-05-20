@@ -12,6 +12,7 @@ import {
 import { BoardService } from '../../../services/board.service';
 import { Board } from '../../../model/board';
 import { AsyncPipe } from '@angular/common';
+import { noDuplicateColumnNames } from '../../../validators/noDuplicateName.validator';
 
 @Component({
   selector: 'app-add-board',
@@ -39,10 +40,13 @@ export class AddBoardComponent {
   ngOnInit() {
     this.addBoardForm = this.fb.group({
       boardName: ['', Validators.required],
-      boardColumns: this.fb.array([
-        this.fb.group({ name: ['Todo', Validators.required] }),
-        this.fb.group({ name: ['Doing', Validators.required] }),
-      ]),
+      boardColumns: this.fb.array(
+        [
+          this.fb.group({ name: ['Todo', Validators.required] }),
+          this.fb.group({ name: ['Doing', Validators.required] }),
+        ],
+        { validators: noDuplicateColumnNames() }
+      ),
     });
   }
 

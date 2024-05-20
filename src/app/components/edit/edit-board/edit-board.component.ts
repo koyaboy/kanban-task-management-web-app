@@ -15,6 +15,7 @@ import {
 } from '@angular/forms';
 import { Column } from '../../../model/column';
 import { Subscription } from 'rxjs';
+import { noDuplicateColumnNames } from '../../../validators/noDuplicateName.validator';
 
 @Component({
   selector: 'app-edit-board',
@@ -57,7 +58,8 @@ export class EditBoardComponent {
       boardColumns: this.fb.array(
         (this.selectedBoardColumns || []).map((column) =>
           this.fb.group({ name: [column.name, Validators.required] })
-        )
+        ),
+        { validators: noDuplicateColumnNames() }
       ),
     });
   }
